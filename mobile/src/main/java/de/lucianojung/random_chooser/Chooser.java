@@ -1,10 +1,15 @@
 package de.lucianojung.random_chooser;
 
+import java.util.ArrayList;
+
 class Chooser {
-    public String name;
+    private String name;
+    private ArrayList<ChooserValue> valueList;
+    //add Enum for ValueType
 
     public Chooser(String name) {
         this.name = name;
+        valueList = new ArrayList<ChooserValue>();
     }
 
     //getter and setter//
@@ -15,5 +20,13 @@ class Chooser {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public ArrayList<ChooserValue> getValueList() {
+        return valueList;
+    }
+
+    public void setValueList(ArrayList<ChooserValue> valueList) {
+        this.valueList = valueList;
     }
 }
