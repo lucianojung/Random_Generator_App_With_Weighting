@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -32,7 +31,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_chooser);
         setSupportActionBar(toolbar);
 
         //TaskList
@@ -42,26 +41,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
         valueAdapter = getValueAdapter();
 
-        listView = findViewById(R.id.list);
+        listView = findViewById(R.id.chooser_list);
         listView.setAdapter(chooserAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (!valuesShown){
-                    valueAdapter.clear();
-                    listView.setAdapter(valueAdapter);
-                    Chooser chooser = chooserAdapter.getItem(position);
-                    for (ChooserValue value : chooser.getValueList()) {
-                        valueAdapter.add(value);
-                    }
-                    valuesShown = true;
-                }
-                //Intent valueListActivity = new Intent(view.getContext(), ValueListActivity.class);
-                //startActivity(valueListActivity);
+                Intent valueListActivity = new Intent(view.getContext(), ValueListActivity.class);
+                startActivity(valueListActivity);
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_chooser);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

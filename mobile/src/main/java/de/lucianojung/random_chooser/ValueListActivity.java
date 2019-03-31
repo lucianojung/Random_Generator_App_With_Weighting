@@ -1,28 +1,32 @@
 package de.lucianojung.random_chooser;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ValueListActivity extends Activity {
+public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<ChooserValue> valueAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_valuelist);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_value);
+        setSupportActionBar(toolbar);
 
         //TaskList
         valueAdapter = getValueAdapter();
@@ -30,10 +34,10 @@ public class ValueListActivity extends Activity {
         valueAdapter.add(new ChooserValue(5,5));
         valueAdapter.add(new ChooserValue(4,1));
 
-        ListView listView = findViewById(R.id.list);
+        ListView listView = findViewById(R.id.value_list);
         listView.setAdapter(valueAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_value);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { showDialog();

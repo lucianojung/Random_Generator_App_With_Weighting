@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_chooser"
+            android:id="@+id/toolbar_value"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -21,14 +21,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <ListView
-        android:id="@+id/chooser_list"
+        android:id="@+id/value_list"
         android:layout_marginTop="55dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <!--<include layout="@layout/content_main" />-->
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_chooser"
+        android:id="@+id/fab_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
