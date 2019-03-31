@@ -38,9 +38,12 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
         //TaskList
         valueAdapter = getValueAdapter();
-
-        valueAdapter.add(new ChooserValue(5,5));
-        valueAdapter.add(new ChooserValue(4,1));
+        if (getIntent() != null){
+            Chooser chooser = (Chooser) getIntent().getSerializableExtra("Chooser");
+            for (ChooserValue value: chooser.getValueList()) {
+                valueAdapter.add(value);
+            }
+        }
 
         ListView listView = findViewById(R.id.value_list);
         listView.setAdapter(valueAdapter);

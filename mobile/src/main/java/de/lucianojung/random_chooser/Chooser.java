@@ -1,8 +1,10 @@
 package de.lucianojung.random_chooser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-class Chooser {
+@SuppressWarnings("serial")
+class Chooser implements Serializable{
     private String name;
     private ArrayList<ChooserValue> valueList;
     //add Enum for ValueType

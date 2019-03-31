@@ -1,8 +1,8 @@
 Todo:
 - add Back Button when Values
 - add choose Button
-Iterator-->
 - add logic to Button
+Iterator-->
 - Überschriften bei Values
 - Mehrsprachigkeit Deutsch/ Englisch
 - add delete Item

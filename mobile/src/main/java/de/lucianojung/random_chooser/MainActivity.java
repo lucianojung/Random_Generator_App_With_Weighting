@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
     private ArrayAdapter<Chooser> chooserAdapter;
@@ -36,18 +38,16 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
         //TaskList
         chooserAdapter = getChooserAdapter();
-        chooserAdapter.add(new Chooser("Neuer Chooser"));
-        chooserAdapter.add(new Chooser("Zweiter Chooser"));
-
-        valueAdapter = getValueAdapter();
+        addTestData();
 
         listView = findViewById(R.id.chooser_list);
         listView.setAdapter(chooserAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent valueListActivity = new Intent(view.getContext(), ValueListActivity.class);
-                startActivity(valueListActivity);
+                Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
+                valueListIntent.putExtra("Chooser", chooserAdapter.getItem(adapterView.getPositionForView(view)));
+                startActivity(valueListIntent);
             }
         });
 
@@ -209,5 +209,18 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             }
         };
         return valueAdapter;
+    }
+
+    private void addTestData() {
+        Chooser dice = new Chooser("Würfel");
+        Chooser loadedDice = new Chooser("Gezinkter Würfel");
+        for (int i = 0; i < 6; i++) {
+            dice.getValueList().add(new ChooserValue(i+1,1));
+            if (i == 0 || i == 5)
+                loadedDice.getValueList().add(new ChooserValue(i+1,3));
+            else
+                loadedDice.getValueList().add(new ChooserValue(i+1,1));
+        }
+        chooserAdapter.addAll(dice, loadedDice);
     }
 }
