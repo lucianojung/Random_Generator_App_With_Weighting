@@ -2,6 +2,7 @@ Todo:
 - add Back Button when Values
 - add choose Button
 - add logic to Button
+Iterator-->
 - Überschriften bei Values
 - give valueActivity chooser object chosen
 Iterator-->

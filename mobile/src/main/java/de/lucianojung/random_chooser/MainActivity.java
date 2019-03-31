@@ -152,4 +152,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         }
         chooserAdapter.addAll(dice, loadedDice);
     }
+
+    private void addTestData() {
+        Chooser dice = new Chooser("Würfel");
+        Chooser loadedDice = new Chooser("Gezinkter Würfel");
+        for (int i = 0; i < 6; i++) {
+            dice.getValueList().add(new ChooserValue(i+1,1));
+            if (i == 0 || i == 5)
+                loadedDice.getValueList().add(new ChooserValue(i+1,3));
+            else
+                loadedDice.getValueList().add(new ChooserValue(i+1,1));
+        }
+        chooserAdapter.addAll(dice, loadedDice);
+    }
 }
