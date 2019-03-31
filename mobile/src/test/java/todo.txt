@@ -1,7 +1,8 @@
 Todo:
 - add Back Button when Values
-Iterator-->
 - add choose Button
+Iterator-->
+- add logic to Button
 - Überschriften bei Values
 - Mehrsprachigkeit Deutsch/ Englisch
 - add delete Item
@@ -20,7 +21,8 @@ Iterator-->
 Release 1.0
 - add Image to Chooser with AndroidDialog for choosing Image
 - add Strings and other Values
-- (Drag and Drop Items)
+- (sorting values)
 - Settings
+- (Drag and Drop Items)
 Release 1.1
 - add Animation for Choosing

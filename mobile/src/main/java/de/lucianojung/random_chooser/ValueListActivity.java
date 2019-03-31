@@ -1,5 +1,6 @@
 package de.lucianojung.random_chooser;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,10 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<ChooserValue> valueAdapter;
@@ -43,12 +48,40 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_value);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { showDialog();
+            public void onClick(View view) {
+                showDialog();
             }
         });
 
-
+        Button chooseRandomButton = (Button) findViewById(R.id.choose_random_button);
+        chooseRandomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Button) v).setText(chooseRandomValue());
+            }
+        });
     }
+
+    private CharSequence chooseRandomValue() {
+        //get all data and default elements
+        CharSequence chosenOne = "";
+        List<ChooserValue> valueList = new ArrayList<>();
+        int totalWeighting = 0;
+        for (int i = 0; i < valueAdapter.getCount(); i++) {
+            valueList.add(valueAdapter.getItem(i));
+            totalWeighting += valueList.get(i).getWeighting();
+        }
+        int random = (int)(Math.random() * totalWeighting);
+
+        //algorithm = subtract weighting && i++ until <0 and return value at i
+        int i = -1;
+        do {
+            i++;
+            random -= valueList.get(i).getWeighting();
+        } while(random >= 0);
+        return Integer.toString(valueList.get(i).getValue());
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
