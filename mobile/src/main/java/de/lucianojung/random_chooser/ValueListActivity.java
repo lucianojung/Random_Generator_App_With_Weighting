@@ -126,7 +126,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
         builder.setView(view);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (value.getText() != null && value.getText().toString().length() > 0
