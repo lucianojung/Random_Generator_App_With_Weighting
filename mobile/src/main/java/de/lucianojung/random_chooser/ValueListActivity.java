@@ -46,6 +46,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
             public void onClick(View view) { showDialog();
             }
         });
+
+
     }
 
     @Override
