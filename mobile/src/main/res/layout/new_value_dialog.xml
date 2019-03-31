@@ -13,14 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:hint="Enter Value" />
+            android:hint="@string/value_dialog_text" />
 
         <EditText
             android:id="@+id/edit_weighting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:hint="Enter Weighting" />
+            android:hint="@string/weighting_dialog_text" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

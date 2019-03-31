@@ -20,11 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
     private ArrayAdapter<Chooser> chooserAdapter;
-    private ArrayAdapter<ChooserValue> valueAdapter;
-    private boolean valuesShown = false;
     private ListView listView;
 
     @Override
@@ -36,18 +36,16 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
         //TaskList
         chooserAdapter = getChooserAdapter();
-        chooserAdapter.add(new Chooser("Neuer Chooser"));
-        chooserAdapter.add(new Chooser("Zweiter Chooser"));
-
-        valueAdapter = getValueAdapter();
+        addTestData();
 
         listView = findViewById(R.id.chooser_list);
         listView.setAdapter(chooserAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent valueListActivity = new Intent(view.getContext(), ValueListActivity.class);
-                startActivity(valueListActivity);
+                Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
+                valueListIntent.putExtra("Chooser", chooserAdapter.getItem(adapterView.getPositionForView(view)));
+                startActivity(valueListIntent);
             }
         });
 
@@ -55,10 +53,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (valuesShown)
-                    showValueDialog();
-                else
-                    showChooserDialog();
+                showChooserDialog();
             }
         });
     }
@@ -88,7 +83,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     //shows Dialog to create a new Chooser
     private void showChooserDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Custom Dialog");
+        builder.setTitle(getString(R.string.dialog_title_create_chooser));
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.new_chooser_dialog, null);
@@ -103,12 +98,12 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 if (text.getText() != null && text.getText().toString().length() > 0) {
                     chooserAdapter.add(new Chooser(text.getText().toString()));
                 } else {
-                    Toast.makeText(MainActivity.this, "Please enter something.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -117,44 +112,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
         builder.show();
 
-    }
-
-    private void showValueDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Custom Dialog");
-
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_value_dialog, null);
-
-        final EditText value = view.findViewById(R.id.edit_value);
-        final EditText weighting = view.findViewById(R.id.edit_weighting);
-
-        builder.setView(view);
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (value.getText() != null && value.getText().toString().length() > 0
-                        && weighting.getText() != null && weighting.getText().toString().length() > 0) {
-                    try {
-                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
-                    } catch (Exception e){
-                        Toast.makeText(MainActivity.this, "Please make sure to enter Numbers only.", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Please enter something.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
     }
 
     //returns ArrayAdapter to save Choosers
@@ -183,31 +140,16 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         return adapter;
     }
 
-    //returns ArrayAdapter to save Values of One Chooser
-    public ArrayAdapter<ChooserValue> getValueAdapter() {
-        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        ArrayAdapter<ChooserValue> valueAdapter = new ArrayAdapter<ChooserValue>(this, R.layout.listitem_view_chooser){
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                View view;
-                if (convertView == null)
-                    view = inflater.inflate(R.layout.listitem_view_value, parent, false);
-                else
-                    view = convertView;
-
-                TextView valueText = view.findViewById(R.id.name_value);
-                TextView weightingText = view.findViewById(R.id.name_weighting);
-
-                ChooserValue value = getItem(position);
-
-                valueText.setText(Integer.toString(value.getValue()));
-                weightingText.setText(Integer.toString(value.getWeighting()));
-
-                return view;
-            }
-        };
-        return valueAdapter;
+    private void addTestData() {
+        Chooser dice = new Chooser(getResources().getStringArray(R.array.chooser)[0]);
+        Chooser loadedDice = new Chooser(getResources().getStringArray(R.array.chooser)[1]);
+        for (int i = 0; i < 6; i++) {
+            dice.getValueList().add(new ChooserValue(i+1,1));
+            if (i == 0 || i == 5)
+                loadedDice.getValueList().add(new ChooserValue(i+1,3));
+            else
+                loadedDice.getValueList().add(new ChooserValue(i+1,1));
+        }
+        chooserAdapter.addAll(dice, loadedDice);
     }
 }

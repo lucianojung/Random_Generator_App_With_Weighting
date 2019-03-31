@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:hint="Enter Name" />
+            android:hint="@string/name_dialog_text_chooser" />
 
-        <!--todo add DropDown for Type  -->
+        <!--todo add DropDown for Type and/ or image -->
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

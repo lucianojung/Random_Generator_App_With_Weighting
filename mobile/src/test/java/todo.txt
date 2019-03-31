@@ -1,9 +1,10 @@
 Todo:
 - add Back Button when Values
 - add choose Button
-Iterator-->
 - add logic to Button
 - Überschriften bei Values
+- give valueActivity chooser object chosen
+Iterator-->
 - Mehrsprachigkeit Deutsch/ Englisch
 - add delete Item
 - add edit Item
@@ -19,6 +20,7 @@ Iterator-->
 - make Runnable Apk for Playstore
 - make Account and Upload App
 Release 1.0
+- add value type for Chooser
 - add Image to Chooser with AndroidDialog for choosing Image
 - add Strings and other Values
 - (sorting values)

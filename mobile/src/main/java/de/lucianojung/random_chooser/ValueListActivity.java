@@ -38,9 +38,12 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
         //TaskList
         valueAdapter = getValueAdapter();
-
-        valueAdapter.add(new ChooserValue(5,5));
-        valueAdapter.add(new ChooserValue(4,1));
+        if (getIntent() != null){
+            Chooser chooser = (Chooser) getIntent().getSerializableExtra("Chooser");
+            for (ChooserValue value: chooser.getValueList()) {
+                valueAdapter.add(value);
+            }
+        }
 
         ListView listView = findViewById(R.id.value_list);
         listView.setAdapter(valueAdapter);
@@ -113,7 +116,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
     private void showDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Custom Dialog");
+        builder.setTitle(getString(R.string.dialog_title_create_value));
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.new_value_dialog, null);
@@ -131,15 +134,15 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                     try {
                         valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
                     } catch (Exception e){
-                        Toast.makeText(ValueListActivity.this, "Please make sure to enter Numbers only.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(ValueListActivity.this, "Please enter something.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ValueListActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

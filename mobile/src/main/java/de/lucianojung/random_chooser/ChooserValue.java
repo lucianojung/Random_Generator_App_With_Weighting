@@ -1,6 +1,9 @@
 package de.lucianojung.random_chooser;
 
-public class ChooserValue {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class ChooserValue implements Serializable{
 
     private int value; //make it object for different values
     private int weighting;
