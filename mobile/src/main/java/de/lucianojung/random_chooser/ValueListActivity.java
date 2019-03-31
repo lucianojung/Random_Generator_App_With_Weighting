@@ -28,6 +28,9 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_value);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //TaskList
         valueAdapter = getValueAdapter();
 
@@ -43,6 +46,12 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
             public void onClick(View view) { showDialog();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
