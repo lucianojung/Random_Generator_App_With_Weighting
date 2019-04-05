@@ -4,12 +4,12 @@ Todo:
 - add logic to Button
 - Überschriften bei Values
 - give valueActivity chooser object chosen
-Iterator-->
 - Mehrsprachigkeit Deutsch/ Englisch
-- add delete Item
 - add edit Item
+- add delete Item
 - add delete Chooser
-- add edit Chooser
+// - add edit Chooser
+Iterator-->
 - save Data
 - load Data
 - handle onPause

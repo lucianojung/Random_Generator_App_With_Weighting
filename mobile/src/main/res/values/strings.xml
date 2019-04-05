@@ -20,4 +20,5 @@
     </string-array>
     <string name="cancel">Cancel</string>
     <string name="ok" translatable="false">ok</string>
+    <string name="delete_item_message">Do you really want to delete this Item?</string>
 </resources>

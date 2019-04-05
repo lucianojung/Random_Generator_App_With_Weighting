@@ -10,9 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +27,9 @@ import java.util.List;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<ChooserValue> valueAdapter;
+    private enum DialogType{
+        EDIT, ADD, REMOVE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +52,26 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.value_list);
         listView.setAdapter(valueAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // System.out.println(valueAdapter.getItem(position).getValue());
+                showDialog(DialogType.EDIT, valueAdapter.getItem(position));
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                showDialog(DialogType.REMOVE, valueAdapter.getItem(position));
+                return true;
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_value);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                showDialog(DialogType.ADD, null);
             }
         });
 
@@ -66,8 +85,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     }
 
     private CharSequence chooseRandomValue() {
+        if (valueAdapter.getCount() == 0) return "";
         //get all data and default elements
-        CharSequence chosenOne = "";
         List<ChooserValue> valueList = new ArrayList<>();
         int totalWeighting = 0;
         for (int i = 0; i < valueAdapter.getCount(); i++) {
@@ -114,9 +133,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.dialog_title_create_value));
+    private void showDialog(DialogType dialogType, final ChooserValue chooserValue){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.new_value_dialog, null);
@@ -124,33 +142,73 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         final EditText value = view.findViewById(R.id.edit_value);
         final EditText weighting = view.findViewById(R.id.edit_weighting);
 
-        builder.setView(view);
+        switch (dialogType) {
+            case ADD:
+                dialogBuilder
+                        .setView(view)
+                        .setTitle(getString(R.string.dialog_title_create_value))
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (value.getText() != null && value.getText().toString().length() > 0
+                                        && weighting.getText() != null && weighting.getText().toString().length() > 0) {
+                                    try {
+                                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
+                                    } catch (Exception e) {
+                                        Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(ValueListActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                break;
 
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (value.getText() != null && value.getText().toString().length() > 0
-                        && weighting.getText() != null && weighting.getText().toString().length() > 0) {
-                    try {
-                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
-                    } catch (Exception e){
-                        Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(ValueListActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            case EDIT:
+                value.setText(Integer.toString(chooserValue.getValue()));
+                weighting.setText(Integer.toString(chooserValue.getWeighting()));
 
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                dialogBuilder
+                        .setView(view)
+                        .setTitle(getString(R.string.dialog_title_create_value))
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (value.getText() != null && value.getText().toString().length() > 0
+                                        && weighting.getText() != null && weighting.getText().toString().length() > 0) {
+                                    try {
+                                        valueAdapter.remove(chooserValue);
+                                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
+                                    } catch (Exception e) {
+                                        Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(ValueListActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                break;
+
+            case REMOVE:
+                dialogBuilder
+                        .setMessage(getString(R.string.delete_item_message))
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                valueAdapter.remove(chooserValue);
+                            }
+                        });
+                break;
+            default:
+                break;
+        }
+
+        dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        });
-
-        builder.show();
-
+        }).show();
     }
 
     private ArrayAdapter<ChooserValue> getValueAdapter(){

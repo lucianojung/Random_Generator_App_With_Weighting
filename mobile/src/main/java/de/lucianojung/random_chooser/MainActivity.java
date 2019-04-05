@@ -26,6 +26,9 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
     private ArrayAdapter<Chooser> chooserAdapter;
     private ListView listView;
+    private enum DialogType{
+        ADD, EDIT, REMOVE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +51,26 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 startActivity(valueListIntent);
             }
         });
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // System.out.println(valueAdapter.getItem(position).getValue());
+                showDialog(DialogType.EDIT, chooserAdapter.getItem(position));
+            }
+        });*/
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                showDialog(DialogType.REMOVE, chooserAdapter.getItem(position));
+                return true;
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_chooser);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooserDialog();
+                showDialog(DialogType.ADD, null);
             }
         });
     }
@@ -80,38 +97,70 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //shows Dialog to create a new Chooser
-    private void showChooserDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.dialog_title_create_chooser));
+    private void showDialog(DialogType dialogType, final Chooser chooser){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.new_chooser_dialog, null);
 
         final EditText text = view.findViewById(R.id.edit_text);
 
-        builder.setView(view);
+        switch (dialogType) {
+            case ADD:
+                dialogBuilder
+                        .setView(view)
+                        .setTitle(getString(R.string.dialog_title_create_chooser))
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (text.getText() != null && text.getText().toString().length() > 0) {
+                                    chooserAdapter.add(new Chooser(text.getText().toString()));
+                                } else {
+                                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                break;
 
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (text.getText() != null && text.getText().toString().length() > 0) {
-                    chooserAdapter.add(new Chooser(text.getText().toString()));
-                } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            case EDIT:
+                text.setText(chooser.getName());
 
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                dialogBuilder
+                        .setView(view)
+                        .setTitle(getString(R.string.dialog_title_create_value))
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (text.getText() != null && text.getText().toString().length() > 0) {
+                                    chooserAdapter.remove(chooser);
+                                    chooserAdapter.add(new Chooser(text.getText().toString()));
+                                } else {
+                                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                break;
+
+            case REMOVE:
+                dialogBuilder
+                        .setMessage(getString(R.string.delete_item_message))
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                chooserAdapter.remove(chooser);
+                            }
+                        });
+                break;
+            default:
+                break;
+        }
+
+        dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        });
-
-        builder.show();
-
+        }).show();
     }
 
     //returns ArrayAdapter to save Choosers
