@@ -7,7 +7,6 @@ gradle/*
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
-*.xml
 .DS_Store
 /build
 /captures

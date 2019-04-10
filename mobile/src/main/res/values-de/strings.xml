@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Zufallsgenerator</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="dialog_title_create_chooser">Zufallsgenerator erzeugen</string>
+    <string name="name_dialog_text_chooser">Titel eingeben</string>
+
+    <string name="choose_random_button_name">Zufallswert wählen</string>
+    <string name="value_heading_name">Wert</string>
+    <string name="weighting_heading_name">Gewichtung</string>
+    <string name="value_dialog_text">Wert eigeben</string>
+    <string name="weighting_dialog_text">Gewichtung eingeben</string>
+    <string name="dialog_title_create_value">Wert hinzufügen</string>
+
+    <string name="empty_string_warning">Bitte geben sie etwas ein!</string>
+    <string name="not_valid_value_warning">Stellen Sie bitte sicher nur Zahlenwerte einzugeben!</string>
+
+    <string-array name="chooser">
+        <item>Würfel</item>
+        <item>Gezinkter Würfel</item>
+    </string-array>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete_item_message">Möchten Sie dieses Item wirklich löschen?</string>
+</resources>

@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 
+import androidx.navigation.Navigation;
+
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
     private ArrayAdapter<Chooser> chooserAdapter;
@@ -49,6 +51,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
                 valueListIntent.putExtra("Chooser", chooserAdapter.getItem(adapterView.getPositionForView(view)));
                 startActivity(valueListIntent);
+//                Navigation.findNavController(view).navigate(R.id.action_mainActivity_to_valueListActivity);
             }
         });
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
