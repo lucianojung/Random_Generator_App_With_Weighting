@@ -10,6 +10,7 @@ Todo:
 - add delete Chooser
 // - add edit Chooser
 Iterator-->
+- sort Values
 - save Data
 - load Data
 - handle onPause
@@ -24,7 +25,8 @@ Release 1.0
 - add Image to Chooser with AndroidDialog for choosing Image
 - add Strings and other Values
 - (sorting values)
-- Settings
-- (Drag and Drop Items)
+- Menu
+    - Settings (Sorting, Weighting, Vibration, Animation(disabled), ?Storage?)
+- (Drag and Drop Items) -> disables Sorting
 Release 1.1
 - add Animation for Choosing
