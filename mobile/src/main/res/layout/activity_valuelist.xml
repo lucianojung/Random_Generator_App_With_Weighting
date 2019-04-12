@@ -69,7 +69,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@color/common_google_signin_btn_text_dark"
+        android:backgroundTint="@color/design_default_color_primary_dark"
         app:borderWidth="0dp"
         app:maxImageSize="56dp"
         app:srcCompat="@android:drawable/ic_input_add" />
