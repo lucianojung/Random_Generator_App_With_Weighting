@@ -4,10 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-class DBAccess extends SQLiteOpenHelper {
-
+public class DBAccess extends SQLiteOpenHelper {
     private SQLiteDatabase database;
 
     public DBAccess(@Nullable Context activity, @Nullable String dbName) {
@@ -17,15 +15,22 @@ class DBAccess extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        try {
-//            String sql = "CREATE TABLE Chooser"
-        } catch (Exception e) {
-            Log.e("Database Exception" ,e.getMessage());
-        }
+        String sqlStatement = String.valueOf(R.string.sql_statement_create_table_chooser);
+        System.out.println(sqlStatement);
+        //database.execSQL(sqlStatement);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    @Override
+    public synchronized void close(){
+        if (database != null) {
+            database.close();
+            database = null;
+        }
+        super.close();
     }
 }

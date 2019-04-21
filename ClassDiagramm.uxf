@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>10</x>
+      <y>520</y>
+      <w>250</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Chooser
+--
+- name: String
+- valueList: ArrayList&lt;ChooserValue&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>760</x>
+      <y>510</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ChooserValue
+--
+- value: object
+- weighting: int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>510</y>
+      <w>450</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>UserDialog
+--
++ dialogType: enum
+- view: final View
+--
++ UserDialog(view: View)
++ showDialog(input: ArrayList&lt;Object&gt;,dialogType: enum): Optional&lt;T&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>10</x>
+      <y>280</y>
+      <w>400</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>MainActivity
+--
+- adapter: ArrayAdapter&lt;Chooser&gt;
+- listView ListView
+- userDialog: UserDialog
+--
++ onCreate: void @Override
++ onCreateOptionsMenu(menu: Menu): boolean @Override
++ onOptionsItemSelected(item: MenuItem): boolean @Override
++ onPause():void @Override
++ onResume(): void @Override
++ onRestart():void @Override
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>580</x>
+      <y>260</y>
+      <w>400</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>ValueListActivity
+--
+- adapter: ArrayAdapter&lt;ChooserValue&gt;
+- listView ListView
+- userDialog: UserDialog
+--
++ onCreate: void @Override
++ onCreateOptionsMenu(menu: Menu): boolean @Override
++ onOptionsItemSelected(item: MenuItem): boolean @Override
++ onPause():void @Override
++ onResume(): void @Override
++ onRestart():void @Override
++ onSupportNavigateUp(): boolean @Override
+- getRandomValue(): ChooserValue
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>350</x>
+      <y>140</y>
+      <w>300</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>objectArrayAdapter
+--
+- object: Object
+- view: final View
+--
++ objectAdapter(view: View)
++ getArrayAdapter&lt;object&gt;(): ArrayAdapter
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>10</x>
+      <y>20</y>
+      <w>440</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>DBAccess
+--
+
+--
++ DBAccess(activity: Context, dbName: String)
++ onCreate(db: SQLiteDatabase): void @Override
++ onUpgrade(db: SQLiteDatabase, old:int, new:int): void @Override
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>390</x>
+      <y>290</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>ListActivity
+--
+Superklasse zu beiden Activities</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

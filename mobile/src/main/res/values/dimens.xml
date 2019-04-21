@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="dice_button_height">64dp</dimen>
+    <dimen name="item_height">48dp</dimen>
 </resources>

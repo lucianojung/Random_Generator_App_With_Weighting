@@ -1,6 +1,5 @@
 package de.lucianojung.random_chooser;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -30,6 +28,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private enum DialogType{
         EDIT, ADD, REMOVE
     }
+    Chooser parentChooser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         //TaskList
         valueAdapter = getValueAdapter();
         if (getIntent() != null){
-            Chooser chooser = (Chooser) getIntent().getSerializableExtra("Chooser");
-            for (ChooserValue value: chooser.getValueList()) {
+            parentChooser = (Chooser) getIntent().getSerializableExtra("Chooser");
+            for (ChooserValue value: parentChooser.getValueList()) {
                 valueAdapter.add(value);
             }
         }
@@ -88,12 +87,10 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         if (valueAdapter.getCount() == 0) return "";
         //get all data and default elements
         List<ChooserValue> valueList = new ArrayList<>();
-        int totalWeighting = 0;
         for (int i = 0; i < valueAdapter.getCount(); i++) {
             valueList.add(valueAdapter.getItem(i));
-            totalWeighting += valueList.get(i).getWeighting();
         }
-        int random = (int)(Math.random() * totalWeighting);
+        int random = (int)(Math.random() * getTotalWeighting());
 
         //algorithm = subtract weighting && i++ until <0 and return value at i
         int i = -1;
@@ -101,7 +98,15 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
             i++;
             random -= valueList.get(i).getWeighting();
         } while(random >= 0);
-        return Integer.toString(valueList.get(i).getValue());
+        return valueList.get(i).getValue();
+    }
+
+    private int getTotalWeighting(){
+        int totalWeighting = 0;
+        for (int i = 0; i < valueAdapter.getCount(); i++) {
+            totalWeighting += valueAdapter.getItem(i).getWeighting();
+        }
+        return totalWeighting;
     }
 
 
@@ -153,7 +158,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
+                                        valueAdapter.add(new ChooserValue(parentChooser.getId(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
@@ -165,7 +170,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                 break;
 
             case EDIT:
-                value.setText(Integer.toString(chooserValue.getValue()));
+                value.setText(chooserValue.getValue());
                 weighting.setText(Integer.toString(chooserValue.getWeighting()));
 
                 dialogBuilder
@@ -178,7 +183,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
                                         valueAdapter.remove(chooserValue);
-                                        valueAdapter.add(new ChooserValue(Integer.parseInt(value.getText().toString()), Integer.parseInt(weighting.getText().toString())));
+                                        valueAdapter.add(new ChooserValue(parentChooser.getId(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
@@ -214,7 +219,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<ChooserValue> getValueAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        ArrayAdapter<ChooserValue> adapter = new ArrayAdapter<ChooserValue>(this, R.layout.listitem_view_chooser){
+        return new ArrayAdapter<ChooserValue>(ValueListActivity.this, R.layout.listitem_view_chooser){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
@@ -229,12 +234,12 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
                 ChooserValue value = getItem(position);
 
-                valueText.setText(Integer.toString(value.getValue()));
-                weightingText.setText(Integer.toString(value.getWeighting()));
+                assert value != null;
+                valueText.setText(value.getValue());
+                weightingText.setText(Integer.toString(value.getWeighting()) + "/" + Integer.toString(getTotalWeighting()));
 
                 return view;
             }
         };
-        return adapter;
     }
 }

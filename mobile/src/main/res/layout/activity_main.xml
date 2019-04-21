@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,25 +28,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_chooserold"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:adjustViewBounds="true"-->
-        <!--android:backgroundTint="@color/common_google_signin_btn_text_dark"-->
-        <!--android:src="@drawable/ic_add_circle_black_24dp"-->
-        <!--app:borderWidth="0dp"-->
-        <!--app:layout_anchor="@+id/chooser_list"-->
-        <!--app:layout_anchorGravity="right|bottom" />-->
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_chooser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_circle_black_24dp"/>
-</android.support.design.widget.CoordinatorLayout>
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        android:src="@drawable/ic_add_white_24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="@color/colorPrimary"/>
+
+</RelativeLayout>
