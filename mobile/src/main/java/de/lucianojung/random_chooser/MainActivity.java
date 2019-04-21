@@ -20,8 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
-
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
     private ArrayAdapter<Chooser> chooserAdapter;
@@ -193,11 +191,11 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         Chooser dice = new Chooser(getResources().getStringArray(R.array.chooser)[0]);
         Chooser loadedDice = new Chooser(getResources().getStringArray(R.array.chooser)[1]);
         for (int i = 0; i < 6; i++) {
-            dice.getValueList().add(new ChooserValue(i+1,1));
+            dice.getValueList().add(new ChooserValue(1,Integer.toString(i+1),1));
             if (i == 0 || i == 5)
-                loadedDice.getValueList().add(new ChooserValue(i+1,3));
+                loadedDice.getValueList().add(new ChooserValue(2,Integer.toString(i+1),3));
             else
-                loadedDice.getValueList().add(new ChooserValue(i+1,1));
+                loadedDice.getValueList().add(new ChooserValue(2,Integer.toString(i+1),1));
         }
         chooserAdapter.addAll(dice, loadedDice);
     }

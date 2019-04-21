@@ -32,12 +32,11 @@
         android:id="@+id/fab_chooser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        android:src="@drawable/ic_add_white_24dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@color/design_default_color_primary_dark"
-        app:borderWidth="0dp"
-        app:maxImageSize="56dp"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:backgroundTint="@color/colorPrimary"/>
 
 </RelativeLayout>
