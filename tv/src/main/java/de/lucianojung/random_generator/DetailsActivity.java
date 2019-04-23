@@ -12,7 +12,7 @@
  * the License.
  */
 
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.app.Activity;
 import android.os.Bundle;

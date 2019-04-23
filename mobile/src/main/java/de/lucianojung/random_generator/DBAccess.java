@@ -1,10 +1,11 @@
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+@Deprecated
 public class DBAccess extends SQLiteOpenHelper {
     private SQLiteDatabase database;
 

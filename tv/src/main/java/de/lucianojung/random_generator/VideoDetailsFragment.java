@@ -12,7 +12,7 @@
  * the License.
  */
 
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.content.Context;
 import android.content.Intent;

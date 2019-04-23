@@ -12,7 +12,7 @@
  * the License.
  */
 
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;

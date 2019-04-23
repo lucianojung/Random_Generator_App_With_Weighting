@@ -1,4 +1,4 @@
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import org.junit.Test;
 

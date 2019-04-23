@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.app.Activity;
 import android.app.Fragment;

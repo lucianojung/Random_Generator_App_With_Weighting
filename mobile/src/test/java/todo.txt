@@ -3,7 +3,7 @@ Todo:
 - add choose Button
 - add logic to Button
 - Überschriften bei Values
-- give valueActivity chooser object chosen
+- give valueActivity randomGenerator object chosen
 - Mehrsprachigkeit Deutsch/ Englisch
 - add edit Item
 - add delete Item

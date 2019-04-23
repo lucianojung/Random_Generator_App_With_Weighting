@@ -1,7 +1,8 @@
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -20,10 +21,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
-    private ArrayAdapter<Chooser> chooserAdapter;
+    private ArrayAdapter<RandomGenerator> generatorArrayAdapter;
     private ListView listView;
+    private AppDatabase database;
     private enum DialogType{
         ADD, EDIT, REMOVE
     }
@@ -36,16 +40,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //TaskList
-        chooserAdapter = getChooserAdapter();
-        addTestData();
+        generatorArrayAdapter = getGeneratorArrayAdapter();
+        //create Database;
+        database = AppDatabase.getAppDatabase(this);
 
         listView = findViewById(R.id.chooser_list);
-        listView.setAdapter(chooserAdapter);
+        listView.setAdapter(generatorArrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
-                valueListIntent.putExtra("Chooser", chooserAdapter.getItem(adapterView.getPositionForView(view)));
+                valueListIntent.putExtra("RandomGenerator", generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
                 startActivity(valueListIntent);
             }
         });
@@ -53,13 +58,13 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // System.out.println(valueAdapter.getItem(position).getValue());
-                showDialog(DialogType.EDIT, chooserAdapter.getItem(position));
+                showDialog(DialogType.EDIT, generatorArrayAdapter.getItem(position));
             }
         });*/
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                showDialog(DialogType.REMOVE, chooserAdapter.getItem(position));
+                showDialog(DialogType.REMOVE, generatorArrayAdapter.getItem(position));
                 return true;
             }
         });
@@ -71,6 +76,29 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 showDialog(DialogType.ADD, null);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        //load Database
+        new AsyncTask<Void, Void, List<RandomGenerator>>(){
+            @Override
+            protected List<RandomGenerator> doInBackground(Void... params) {
+                return database.randomGeneratorDAO().getAllRandomGenerators();
+            }
+
+            @Override
+            protected void onPostExecute(List items){
+                generatorArrayAdapter.addAll(items);
+            }
+        }.execute();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
     }
 
     @Override
@@ -95,7 +123,13 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialog(DialogType dialogType, final Chooser chooser){
+    @Override
+    protected void onDestroy() {
+        AppDatabase.destroyInstance();
+        super.onDestroy();
+    }
+
+    private void showDialog(DialogType dialogType, final RandomGenerator randomGenerator){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -112,7 +146,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (text.getText() != null && text.getText().toString().length() > 0) {
-                                    chooserAdapter.add(new Chooser(text.getText().toString()));
+                                    insertRandomGenerator(new RandomGenerator(0, text.getText().toString()));
                                 } else {
                                     Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                                 }
@@ -121,7 +155,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 break;
 
             case EDIT:
-                text.setText(chooser.getName());
+                text.setText(randomGenerator.getName());
 
                 dialogBuilder
                         .setView(view)
@@ -130,8 +164,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (text.getText() != null && text.getText().toString().length() > 0) {
-                                    chooserAdapter.remove(chooser);
-                                    chooserAdapter.add(new Chooser(text.getText().toString()));
+                                    deleteRandomGenerator(randomGenerator);
+                                    insertRandomGenerator(new RandomGenerator(0, text.getText().toString()));
                                 } else {
                                     Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                                 }
@@ -145,7 +179,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                chooserAdapter.remove(chooser);
+                                deleteRandomGenerator(randomGenerator);
                             }
                         });
                 break;
@@ -162,10 +196,10 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     }
 
     //returns ArrayAdapter to save Choosers
-    private ArrayAdapter<Chooser> getChooserAdapter(){
+    private ArrayAdapter<RandomGenerator> getGeneratorArrayAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        ArrayAdapter<Chooser> adapter = new ArrayAdapter<Chooser>(this, R.layout.listitem_view_chooser){
+        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_chooser){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
@@ -177,9 +211,9 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
                 TextView text1 = view.findViewById(R.id.name_chooser);
 
-                Chooser chooser = getItem(position);
+                RandomGenerator randomGenerator = getItem(position);
 
-                text1.setText(chooser.getName());
+                text1.setText(randomGenerator.getName());
 
                 return view;
             }
@@ -187,16 +221,38 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         return adapter;
     }
 
-    private void addTestData() {
-        Chooser dice = new Chooser(getResources().getStringArray(R.array.chooser)[0]);
-        Chooser loadedDice = new Chooser(getResources().getStringArray(R.array.chooser)[1]);
-        for (int i = 0; i < 6; i++) {
-            dice.getValueList().add(new ChooserValue(1,Integer.toString(i+1),1));
-            if (i == 0 || i == 5)
-                loadedDice.getValueList().add(new ChooserValue(2,Integer.toString(i+1),3));
-            else
-                loadedDice.getValueList().add(new ChooserValue(2,Integer.toString(i+1),1));
-        }
-        chooserAdapter.addAll(dice, loadedDice);
+    //Database Handler
+
+    private void insertRandomGenerator(final RandomGenerator randomGenerator) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomGeneratorDAO().insertAll(randomGenerator);
+                return null;
+            }
+        }.execute();
+        generatorArrayAdapter.add(randomGenerator);
+    }
+
+    private void deleteRandomGenerator(final RandomGenerator randomGenerator) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomGeneratorDAO().delete(randomGenerator);
+                return null;
+            }
+        }.execute();
+        generatorArrayAdapter.remove(randomGenerator);
     }
 }
+
+/*execute Async in seperate method
+
+final Executor executor = Executors.newFixedThreadPool(2);
+MovieDao dao = db.movieDao();
+
+public void addMovie(Movie m){
+    executor.execute(() -> {
+        dao.insert(m);
+    });
+}*/

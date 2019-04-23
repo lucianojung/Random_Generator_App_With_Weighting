@@ -14,13 +14,13 @@
     <string name="empty_string_warning">Please Enter something!</string>
     <string name="not_valid_value_warning">Please make sure to to Enter Numbers only!</string>
 
-    <string-array name="chooser">
+    <string-array name="randomGenerator">
         <item>Dice</item>
         <item>Loaded Dice</item>
     </string-array>
     <string name="cancel">Cancel</string>
     <string name="ok" translatable="false">ok</string>
     <string name="delete_item_message">Do you really want to delete this Item?</string>
-    <string name="sql_statement_create_table_chooser" translatable="false">CREATE TABLE chooser (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(32), valueType VARCHAR(16))</string>
-    <string name="sql_statement_create_table_values" translatable="false">CREATE TABLE chooser (id INTEGER PRIMARY KEY AUTOINCREMENT, chooserID INTEGER FOREIGN KEY, value VARCHAR(32), weighting INTEGER)</string>
+    <string name="sql_statement_create_table_chooser" translatable="false">CREATE TABLE randomGenerator (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(32), valueType VARCHAR(16))</string>
+    <string name="sql_statement_create_table_values" translatable="false">CREATE TABLE randomGenerator (id INTEGER PRIMARY KEY AUTOINCREMENT, chooserID INTEGER FOREIGN KEY, value VARCHAR(32), weighting INTEGER)</string>
 </resources>

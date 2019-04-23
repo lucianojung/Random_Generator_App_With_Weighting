@@ -1,16 +1,21 @@
-package de.lucianojung.random_chooser;
+package de.lucianojung.random_generator;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class ChooserValue implements Serializable{
+public class RandomVariable implements Serializable{
 
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "vid")
     private long id;
     private long chooserID;
     private String value; //make it object for different values
     private int weighting;
 
-    public ChooserValue(long chooserID, String value, int weighting) {
+    public RandomVariable(long chooserID, String value, int weighting) {
         this.id = id;
         this.chooserID = chooserID;
         this.value = value;
