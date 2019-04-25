@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -13,11 +14,11 @@ public interface RandomGeneratorDAO {
     @Query("SELECT * FROM RandomGenerator")
     List<RandomGenerator> getAllRandomGenerators();
 
-    @Query("SELECT * FROM RandomGenerator WHERE gid IN (:randomGeneratorIDs)")
-    List<RandomGenerator> loadAllByIds(int[] randomGeneratorIDs);
+    @Query("SELECT * FROM RandomGenerator WHERE gid = :randomGeneratorID")
+    List<RandomGenerator> loadById(long randomGeneratorID);
 
-    @Query("SELECT * FROM RandomGenerator WHERE name LIKE :name")
-    RandomGenerator findByName(String name);
+//    @Query("SELECT * FROM RandomGenerator WHERE name LIKE :name")
+//    RandomGenerator findByName(String name);
 
     @Insert
     void insertAll(RandomGenerator... randomGenerators);
@@ -25,4 +26,6 @@ public interface RandomGeneratorDAO {
     @Delete
     void delete(RandomGenerator randomGenerator);
 
+    @Update
+    void update(RandomGenerator randomGenerator);
 }

@@ -158,7 +158,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        valueAdapter.add(new RandomVariable(parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
+                                        valueAdapter.add(new RandomVariable(0, parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
@@ -183,7 +183,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
                                         valueAdapter.remove(randomVariable);
-                                        valueAdapter.add(new RandomVariable(parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
+                                        valueAdapter.add(new RandomVariable(0, parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }

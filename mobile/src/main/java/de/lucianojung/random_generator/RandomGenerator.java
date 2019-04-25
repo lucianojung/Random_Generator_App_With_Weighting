@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.media.Image;
 
 import java.io.Serializable;
 
@@ -19,6 +20,8 @@ public class RandomGenerator implements Serializable {
     @ColumnInfo(name = "value_type")
     private String valueType;
     //todo make ValueType enum
+//    @ColumnInfo(name = "image")
+//    private Image image;
 
     public RandomGenerator(long gid, String name) {
         this(gid, name, "String");

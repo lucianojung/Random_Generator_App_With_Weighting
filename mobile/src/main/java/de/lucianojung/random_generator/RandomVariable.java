@@ -1,23 +1,35 @@
 package de.lucianojung.random_generator;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @SuppressWarnings("serial")
+@Entity(tableName = "RandomVariable")
 public class RandomVariable implements Serializable{
 
-//    @PrimaryKey(autoGenerate = true)
+    //    @PrimaryKey(autoGenerate = true)
 //    @ColumnInfo(name = "vid")
-    private long id;
-    private long chooserID;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "vid")
+    private long vid;
+    @ForeignKey(entity = RandomGenerator.class, parentColumns = "gid",
+            childColumns = "gid", onDelete = CASCADE)
+    @ColumnInfo(name = "gid")
+    private long gid;
+    @ColumnInfo(name = "value")
     private String value; //make it object for different values
+    @ColumnInfo(name = "weighting")
     private int weighting;
 
-    public RandomVariable(long chooserID, String value, int weighting) {
-        this.id = id;
-        this.chooserID = chooserID;
+    public RandomVariable(long vid, long gid, String value, int weighting) {
+        this.vid = vid;
+        this.gid = gid;
         this.value = value;
         this.weighting = weighting;
     }
@@ -40,19 +52,19 @@ public class RandomVariable implements Serializable{
         this.weighting = weighting;
     }
 
-    public long getId() {
-        return id;
+    public long getVid() {
+        return vid;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setVid(long vid) {
+        this.vid = vid;
     }
 
-    public long getChooserID() {
-        return chooserID;
+    public long getGid() {
+        return gid;
     }
 
-    public void setChooserID(long chooserID) {
-        this.chooserID = chooserID;
+    public void setGid(long gid) {
+        this.gid = gid;
     }
 }

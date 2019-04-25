@@ -10,9 +10,9 @@ Todo:
 - add delete Chooser
 // - add edit Chooser
 Iterator-->
-- sort Values
 - save Data
 - load Data
+- sort Values
 - handle onPause
 - handle on restart
 - combine if same value
@@ -21,6 +21,7 @@ Iterator-->
 - make Runnable Apk for Playstore
 - make Account and Upload App
 Release 1.0
+- Generator with Image(LEFT), Name(RIGHT_TOP), someVariables(RIGHT_DOWN)
 - add value type for Chooser
 - add Image to Chooser with AndroidDialog for choosing Image
 - add Strings and other Values

@@ -1,5 +1,6 @@
 package de.lucianojung.random_generator;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -76,11 +77,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 showDialog(DialogType.ADD, null);
             }
         });
+        loadDatabase();
+
     }
 
     @Override
     public void onStart() {
-        //load Database
+        super.onStart();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void loadDatabase() {
         new AsyncTask<Void, Void, List<RandomGenerator>>(){
             @Override
             protected List<RandomGenerator> doInBackground(Void... params) {
@@ -92,13 +99,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 generatorArrayAdapter.addAll(items);
             }
         }.execute();
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-
-        super.onStop();
     }
 
     @Override
@@ -239,6 +239,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... voids) {
                 database.randomGeneratorDAO().delete(randomGenerator);
+                return null;
+            }
+        }.execute();
+        generatorArrayAdapter.remove(randomGenerator);
+    }
+
+    private void updateRandomGenerator(final RandomGenerator randomGenerator) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomGeneratorDAO().update(randomGenerator);
                 return null;
             }
         }.execute();
