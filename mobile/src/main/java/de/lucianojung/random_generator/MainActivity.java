@@ -30,14 +30,14 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     private ListView listView;
     private AppDatabase database;
     private enum DialogType{
-        ADD, EDIT, REMOVE
+        ADD, EDIT, REMOVE, ABOUT
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_chooser);
+        Toolbar toolbar = findViewById(R.id.toolbar_chooser);
         setSupportActionBar(toolbar);
 
         //TaskList
@@ -74,20 +74,23 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                AddGeneratorDialogFragment addGeneratorDialogFragment = AddGeneratorDialogFragment.newInstance("Some Title");
+//                addGeneratorDialogFragment.show(fragmentManager, getString(R.string.dialog_title_create_generator));
                 showDialog(DialogType.ADD, null);
             }
         });
-        loadDatabase();
-
     }
 
     @Override
     public void onStart() {
+        loadDatabase();
         super.onStart();
     }
 
     @SuppressLint("StaticFieldLeak")
     private void loadDatabase() {
+        generatorArrayAdapter.clear();
         new AsyncTask<Void, Void, List<RandomGenerator>>(){
             @Override
             protected List<RandomGenerator> doInBackground(Void... params) {
@@ -99,6 +102,12 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 generatorArrayAdapter.addAll(items);
             }
         }.execute();
+    }
+
+    @Override
+    public void onStop() {
+        generatorArrayAdapter.clear();
+        super.onStop();
     }
 
     @Override
@@ -116,7 +125,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            showDialog(DialogType.ABOUT, null);
             return true;
         }
 
@@ -133,15 +143,15 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_chooser_dialog, null);
+        View view = inflater.inflate(R.layout.fragment_generator_dialog, null);
 
-        final EditText text = view.findViewById(R.id.edit_text);
+        final EditText text = view.findViewById(R.id.edit_generator_title);
 
         switch (dialogType) {
             case ADD:
                 dialogBuilder
                         .setView(view)
-                        .setTitle(getString(R.string.dialog_title_create_chooser))
+                        .setTitle(getString(R.string.dialog_title_create_generator))
                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -164,8 +174,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (text.getText() != null && text.getText().toString().length() > 0) {
-                                    deleteRandomGenerator(randomGenerator);
-                                    insertRandomGenerator(new RandomGenerator(0, text.getText().toString()));
+                                    randomGenerator.setName(text.getText().toString());
+                                    updateRandomGenerator(randomGenerator);
                                 } else {
                                     Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                                 }
@@ -184,7 +194,15 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         });
                 break;
             default:
-                break;
+                dialogBuilder
+                        .setMessage(getString(R.string.action_about_text))
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        }).show();
+                return;
         }
 
         dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -199,13 +217,13 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<RandomGenerator> getGeneratorArrayAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_chooser){
+        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_generator){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
                 View view;
                 if (convertView == null)
-                    view = inflater.inflate(R.layout.listitem_view_chooser, parent, false);
+                    view = inflater.inflate(R.layout.listitem_view_generator, parent, false);
                 else
                     view = convertView;
 
@@ -231,13 +249,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 return null;
             }
         }.execute();
-        generatorArrayAdapter.add(randomGenerator);
+        loadDatabase();
     }
 
     private void deleteRandomGenerator(final RandomGenerator randomGenerator) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                List<RandomVariable> randomVariables = database.randomVariableDAO().getAllRandomVariablesByGID(randomGenerator.getGid());
+                for (RandomVariable variable : randomVariables) {
+                    database.randomVariableDAO().delete(variable);
+                }
                 database.randomGeneratorDAO().delete(randomGenerator);
                 return null;
             }
@@ -253,7 +275,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 return null;
             }
         }.execute();
-        generatorArrayAdapter.remove(randomGenerator);
+        generatorArrayAdapter.notifyDataSetChanged();
     }
 }
 

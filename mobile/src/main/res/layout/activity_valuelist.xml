@@ -39,7 +39,7 @@
         android:id="@+id/header_layout"
         android:layout_below="@+id/choose_random_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
+        android:layout_height="wrap_content"
         android:alignmentMode="alignBounds"
         android:orientation="horizontal" >
 
@@ -64,9 +64,10 @@
 
     <ListView
         android:id="@+id/value_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_below="@id/header_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:paddingBottom="@dimen/item_height" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_value"

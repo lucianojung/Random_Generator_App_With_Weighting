@@ -1,6 +1,8 @@
 package de.lucianojung.random_generator;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -20,11 +22,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
-    private ArrayAdapter<RandomVariable> valueAdapter;
+    private ArrayAdapter<RandomVariable> variableAdapter;
+    private AppDatabase database;
+
     private enum DialogType{
         EDIT, ADD, REMOVE
     }
@@ -41,27 +46,26 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //TaskList
-        valueAdapter = getValueAdapter();
+        variableAdapter = getVariableAdapter();
+        //create Database;
+        database = AppDatabase.getAppDatabase(this);
         if (getIntent() != null){
             parentRandomGenerator = (RandomGenerator) getIntent().getSerializableExtra("RandomGenerator");
-//            for (RandomVariable value: parentRandomGenerator.getValueList()) {
-//                valueAdapter.add(value);
-//            }
         }
 
         ListView listView = findViewById(R.id.value_list);
-        listView.setAdapter(valueAdapter);
+        listView.setAdapter(variableAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // System.out.println(valueAdapter.getItem(position).getValue());
-                showDialog(DialogType.EDIT, valueAdapter.getItem(position));
+                // System.out.println(variableAdapter.getItem(position).getValue());
+                showDialog(DialogType.EDIT, variableAdapter.getItem(position));
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                showDialog(DialogType.REMOVE, valueAdapter.getItem(position));
+                showDialog(DialogType.REMOVE, variableAdapter.getItem(position));
                 return true;
             }
         });
@@ -83,12 +87,34 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onStart() {
+        loadDatabase();
+        super.onStart();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void loadDatabase() {
+        variableAdapter.clear();
+        new AsyncTask<Void, Void, List<RandomVariable>>(){
+            @Override
+            protected List<RandomVariable> doInBackground(Void... params) {
+                return database.randomVariableDAO().getAllRandomVariablesByGID(parentRandomGenerator.getGid());
+            }
+
+            @Override
+            protected void onPostExecute(List items){
+                variableAdapter.addAll(items);
+            }
+        }.execute();
+    }
+
     private CharSequence chooseRandomValue() {
-        if (valueAdapter.getCount() == 0) return "";
+        if (variableAdapter.getCount() == 0) return "";
         //get all data and default elements
         List<RandomVariable> valueList = new ArrayList<>();
-        for (int i = 0; i < valueAdapter.getCount(); i++) {
-            valueList.add(valueAdapter.getItem(i));
+        for (int i = 0; i < variableAdapter.getCount(); i++) {
+            valueList.add(variableAdapter.getItem(i));
         }
         int random = (int)(Math.random() * getTotalWeighting());
 
@@ -103,8 +129,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
     private int getTotalWeighting(){
         int totalWeighting = 0;
-        for (int i = 0; i < valueAdapter.getCount(); i++) {
-            totalWeighting += valueAdapter.getItem(i).getWeighting();
+        for (int i = 0; i < variableAdapter.getCount(); i++) {
+            totalWeighting += variableAdapter.getItem(i).getWeighting();
         }
         return totalWeighting;
     }
@@ -131,24 +157,37 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStop() {
+        variableAdapter.clear();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        AppDatabase.destroyInstance();
+        super.onDestroy();
+    }
+
     private void showDialog(DialogType dialogType, final RandomVariable randomVariable){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_value_dialog, null);
+        View view = inflater.inflate(R.layout.fragment_variable_dialog, null);
 
         final EditText value = view.findViewById(R.id.edit_value);
         final EditText weighting = view.findViewById(R.id.edit_weighting);
 
         switch (dialogType) {
             case ADD:
+                weighting.setText(Integer.toString(1));
                 dialogBuilder
                         .setView(view)
                         .setTitle(getString(R.string.dialog_title_create_value))
@@ -158,12 +197,17 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        valueAdapter.add(new RandomVariable(0, parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
+                                        insertRandomVariable(new RandomVariable(
+                                                0, parentRandomGenerator.getGid(),
+                                                value.getText().toString(),
+                                                Integer.parseInt(weighting.getText().toString())));
                                     } catch (Exception e) {
-                                        Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ValueListActivity.this,
+                                                getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Toast.makeText(ValueListActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ValueListActivity.this,
+                                            getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -182,8 +226,9 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        valueAdapter.remove(randomVariable);
-                                        valueAdapter.add(new RandomVariable(0, parentRandomGenerator.getGid(), value.getText().toString(), Integer.parseInt(weighting.getText().toString())));
+                                        randomVariable.setValue(value.getText().toString());
+                                        randomVariable.setWeighting(Integer.parseInt(weighting.getText().toString()));
+                                        updateRandomVariable(randomVariable);
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
@@ -200,7 +245,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                valueAdapter.remove(randomVariable);
+                                deleteRandomVariable(randomVariable);
                             }
                         });
                 break;
@@ -216,16 +261,16 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         }).show();
     }
 
-    private ArrayAdapter<RandomVariable> getValueAdapter(){
+    private ArrayAdapter<RandomVariable> getVariableAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        return new ArrayAdapter<RandomVariable>(ValueListActivity.this, R.layout.listitem_view_chooser){
+        return new ArrayAdapter<RandomVariable>(ValueListActivity.this, R.layout.listitem_view_generator){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
                 View view;
                 if (convertView == null)
-                    view = inflater.inflate(R.layout.listitem_view_value, parent, false);
+                    view = inflater.inflate(R.layout.listitem_view_variable, parent, false);
                 else
                     view = convertView;
 
@@ -236,10 +281,47 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
                 assert value != null;
                 valueText.setText(value.getValue());
-                weightingText.setText(Integer.toString(value.getWeighting()) + "/" + Integer.toString(getTotalWeighting()));
+                NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+                defaultFormat.setMinimumFractionDigits(1);
+                weightingText.setText(defaultFormat.format(((double)value.getWeighting()/(double)getTotalWeighting())));
 
                 return view;
             }
         };
+    }
+
+    //Database Handler
+
+    private void insertRandomVariable(final RandomVariable randomVariable) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomVariableDAO().insertAll(randomVariable);
+                return null;
+            }
+        }.execute();
+        loadDatabase();
+    }
+
+    private void deleteRandomVariable(final RandomVariable randomVariable) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomVariableDAO().delete(randomVariable);
+                return null;
+            }
+        }.execute();
+        variableAdapter.remove(randomVariable);
+    }
+
+    private void updateRandomVariable(final RandomVariable randomVariable) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.randomVariableDAO().update(randomVariable);
+                return null;
+            }
+        }.execute();
+        variableAdapter.notifyDataSetChanged();
     }
 }

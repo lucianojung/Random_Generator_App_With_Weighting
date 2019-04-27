@@ -17,8 +17,8 @@ public interface RandomGeneratorDAO {
     @Query("SELECT * FROM RandomGenerator WHERE gid = :randomGeneratorID")
     List<RandomGenerator> loadById(long randomGeneratorID);
 
-//    @Query("SELECT * FROM RandomGenerator WHERE name LIKE :name")
-//    RandomGenerator findByName(String name);
+    @Query("SELECT * FROM RandomGenerator WHERE name LIKE :name")
+    RandomGenerator findByName(String name);
 
     @Insert
     void insertAll(RandomGenerator... randomGenerators);

@@ -9,14 +9,13 @@
     <fragment
         android:id="@+id/mainActivity"
         android:name="de.lucianojung.random_generator.MainActivity"
-        android:label="activity_valuelist"
-        tools:layout="@layout/content_main" >
+        android:label="activity_valuelist">
         <action
             android:id="@+id/action_mainActivity_to_valueListActivity"
             app:destination="@+id/valueListActivity" />
         <action
             android:id="@+id/action_mainActivity_to_chooserDialog"
-            app:destination="@id/chooserDialog" />
+            app:destination="@id/generatorDialog" />
     </fragment>
     <fragment
         android:id="@+id/valueListActivity"
@@ -28,14 +27,14 @@
             app:destination="@id/valueDialog" />
     </fragment>
     <fragment
-        android:id="@+id/chooserDialog"
+        android:id="@+id/generatorDialog"
         android:name="de.lucianojung.random_generator.MainActivity"
         android:label="new_chooser_dialog"
-        tools:layout="@layout/new_chooser_dialog" />
+        tools:layout="@layout/fragment_generator_dialog" />
     <fragment
         android:id="@+id/valueDialog"
         android:name="de.lucianojung.random_generator.ValueListActivity"
         android:label="new_value_dialog"
-        tools:layout="@layout/new_value_dialog" />
+        tools:layout="@layout/fragment_variable_dialog" />
 
 </navigation>

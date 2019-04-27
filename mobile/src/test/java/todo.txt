@@ -1,28 +1,32 @@
+﻿Prework
+- add MainActivity and ValueListActivity (with floating Button and MenuBar) + xml (UI)
+- add Chooser and ChooserValue Classes
+- add Dialogs as xml (UI)
+- add Dialog in both Activities
+- add ArrayListAdapter in both Activities
 Todo:
-- add Back Button when Values
+- add Back Button when ValueListActivity
 - add choose Button
 - add logic to Button
 - Überschriften bei Values
 - give valueActivity randomGenerator object chosen
-- Mehrsprachigkeit Deutsch/ Englisch
+- Multilinguism German/ English
 - add edit Item
 - add delete Item
 - add delete Chooser
 // - add edit Chooser
-Iterator-->
 - save Data
 - load Data
-- sort Values
-- handle onPause
-- handle on restart
-- combine if same value
 - better Layout
 - make default Chooser
+Iterator-->
 - make Runnable Apk for Playstore
 - make Account and Upload App
 Release 1.0
-- Generator with Image(LEFT), Name(RIGHT_TOP), someVariables(RIGHT_DOWN)
-- add value type for Chooser
+- combine if same value
+- make layout via Fragments for better Tablet View
+- add value type for Random Generator
+- sort Values
 - add Image to Chooser with AndroidDialog for choosing Image
 - add Strings and other Values
 - (sorting values)
