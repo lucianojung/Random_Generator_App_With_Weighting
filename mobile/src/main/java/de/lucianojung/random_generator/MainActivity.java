@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +27,7 @@ import java.util.List;
 
 import de.lucianojung.random_generator.Dialogs.GeneratorDialogFragment;
 
-public class MainActivity<T extends Adapter> extends AppCompatActivity {
+public class MainActivity<T extends Adapter> extends AppCompatActivity implements GeneratorDialogFragment.DataEntryListener {
 
     private ArrayAdapter<RandomGenerator> generatorArrayAdapter;
     private ListView listView;
@@ -54,23 +53,14 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
-                valueListIntent.putExtra("RandomGenerator", (Serializable) generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
-                startActivity(valueListIntent);
+                handleEditGenerator(position);
+//                handleOpenGenerator(adapterView, view);
             }
         });
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // System.out.println(valueAdapter.getItem(position).getValue());
-                showDialog(DialogType.EDIT, generatorArrayAdapter.getItem(position));
-            }
-        });*/
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                showDialog(DialogType.REMOVE, generatorArrayAdapter.getItem(position));
-                return true;
+                return handleRemoveGenerator(position);
             }
         });
 
@@ -78,12 +68,46 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GeneratorDialogFragment generatorDialog = GeneratorDialogFragment.newInstance(new RandomGenerator(0, ""));
-//                showDialog(DialogType.ADD, null);
-                generatorDialog.show(getSupportFragmentManager(), "ADD_GENERATOR_DIALOG_FRAGMENT");
+                handleAddGenerator();
             }
         });
     }
+
+    //onClickListener
+
+    private void handleAddGenerator(){
+//        showDialog(DialogType.ADD, null);
+        GeneratorDialogFragment generatorDialog = GeneratorDialogFragment.newInstance(null);
+        generatorDialog.show(getSupportFragmentManager(), "ADD_GENERATOR_DIALOG_FRAGMENT");
+    }
+
+    private void handleEditGenerator(int position){
+//        showDialog(DialogType.EDIT, generatorArrayAdapter.getItem(position));
+        GeneratorDialogFragment generatorDialog = GeneratorDialogFragment.newInstance(generatorArrayAdapter.getItem(position));
+        generatorDialog.show(getSupportFragmentManager(), "ADD_GENERATOR_DIALOG_FRAGMENT");
+    }
+
+    private boolean handleRemoveGenerator(int position){
+        return showDialog(DialogType.REMOVE, generatorArrayAdapter.getItem(position));
+    }
+
+    private void handleOpenGenerator(AdapterView<?> adapterView, View view){
+        Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
+        valueListIntent.putExtra("RandomGenerator", (Serializable) generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
+        startActivity(valueListIntent);
+    }
+
+    //data Entry Listener for Dialogs
+
+    @Override
+    public void onDataEntryComplete(RandomGenerator generator, boolean newGenerator) {
+        if (newGenerator)
+            insertRandomGenerator(generator);
+        else
+            updateRandomGenerator(generator);
+    }
+
+    //override Methods
 
     @Override
     public void onStart() {
@@ -142,7 +166,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void showDialog(DialogType dialogType, final RandomGenerator randomGenerator){
+    private boolean showDialog(DialogType dialogType, final RandomGenerator randomGenerator){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -205,7 +229,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                                 return;
                             }
                         }).show();
-                return;
+                return true;
         }
 
         dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -214,6 +238,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 dialog.dismiss();
             }
         }).show();
+        return true;
     }
 
     //returns ArrayAdapter to save Choosers
