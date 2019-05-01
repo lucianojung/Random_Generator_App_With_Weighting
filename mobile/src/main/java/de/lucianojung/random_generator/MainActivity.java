@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.List;
+
+import de.lucianojung.random_generator.Dialogs.GeneratorDialogFragment;
 
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
@@ -51,7 +55,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
-                valueListIntent.putExtra("RandomGenerator", generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
+                valueListIntent.putExtra("RandomGenerator", (Serializable) generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
                 startActivity(valueListIntent);
             }
         });
@@ -74,10 +78,9 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                AddGeneratorDialogFragment addGeneratorDialogFragment = AddGeneratorDialogFragment.newInstance("Some Title");
-//                addGeneratorDialogFragment.show(fragmentManager, getString(R.string.dialog_title_create_generator));
-                showDialog(DialogType.ADD, null);
+                GeneratorDialogFragment generatorDialog = GeneratorDialogFragment.newInstance(new RandomGenerator(0, ""));
+//                showDialog(DialogType.ADD, null);
+                generatorDialog.show(getSupportFragmentManager(), "ADD_GENERATOR_DIALOG_FRAGMENT");
             }
         });
     }
@@ -145,7 +148,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_generator_dialog, null);
 
-        final EditText text = view.findViewById(R.id.edit_generator_title);
+        final EditText text = view.findViewById(R.id.generator_title);
 
         switch (dialogType) {
             case ADD:
