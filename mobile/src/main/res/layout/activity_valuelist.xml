@@ -29,6 +29,7 @@
         android:layout_below="@+id/appbar_layout"
         android:layout_gravity="center_horizontal"
         android:text="@string/choose_random_button_name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         app:backgroundTint="@color/colorPrimary"
         app:cornerRadius="@dimen/fab_margin"
         app:icon="@drawable/ic_casino_white_24dp"
@@ -64,8 +65,8 @@
 
     <ListView
         android:id="@+id/value_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:paddingBottom="@dimen/item_height" />
 

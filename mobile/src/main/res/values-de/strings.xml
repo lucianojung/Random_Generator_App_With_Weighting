@@ -2,7 +2,7 @@
     <string name="app_name">Zufallsgenerator</string>
     <string name="action_settings">Einstellungen</string>
     <string name="dialog_title_create_generator">Erstelle Zufallsgenerator</string>
-    <string name="name_dialog_text_chooser">Gib einen Titel ein</string>
+    <string name="name_dialog_text_chooser">Generator 1</string>
 
     <string name="choose_random_button_name">Wähle einen zufälligen Wert</string>
     <string name="value_heading_name">Wert</string>
@@ -24,7 +24,7 @@
     <string name="autofill_hint_text">nur Text</string>
     <string name="action_about">Über</string>
     <string name="action_about_text">
-        Die App ist eine Ein-Personen Entwicklung\n\n
+        Vielen Dank, dass du diese App nutzt :)\n
         Ich werde diese App freizeitlich stetig weiterentwickeln\n
         Geplante zukünftige Features werden sein:\n
         - eine Animation beim erzeugen einer Zufallsvariablen\n
@@ -36,7 +36,12 @@
         Der Code dieser App ist frei zugänglich auf Github\n
         https://github.com/lucianojung/Random_Generator_App_With_Weighting\n
         Über Feedback würde ich mich freuen:\n
-        LucianoJ@posteo.de :)
+        LucianoJ@posteo.de
     </string>
+    <string name="dialog_title_generator">Generator Name:</string>
+    <string name="dialog_title_weighting">Gewichtung:</string>
+    <string name="dialog_title_value">Wert:</string>
+    <string name="null_pointer_warning">Eine Ressource fehlt! Bitte starte die App neu</string>
+    <string name="default_generator">Zufallsgenerator</string>
     <string name="edit">"Überarbeiten von "</string>
 </resources>

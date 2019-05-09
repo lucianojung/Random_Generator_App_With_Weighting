@@ -8,21 +8,20 @@
         android:id="@+id/imageView"
         android:layout_width="@dimen/image_icon"
         android:layout_height="@dimen/image_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/name_chooser"
+        android:padding="@dimen/padding"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/name_chooser"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="@dimen/padding"
         android:src="@drawable/randomized_dice_960_720" />
 
     <TextView
         android:id="@+id/name_chooser"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/item_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:paddingLeft="@dimen/text_padding_left"
         android:paddingTop="@dimen/padding"
         android:paddingBottom="@dimen/padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

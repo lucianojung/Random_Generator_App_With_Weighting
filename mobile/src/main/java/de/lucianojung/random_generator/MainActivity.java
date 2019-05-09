@@ -172,7 +172,12 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity implement
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_generator_dialog, null);
 
-        final EditText text = view.findViewById(R.id.generator_title);
+        // final EditText text = view.findViewById(R.id.edit_generator_title);
+        // -> throws exception when remove dialog!
+        final EditText text = null;
+        if (text == null){
+            Toast.makeText(MainActivity.this, getString(R.string.null_pointer_warning), Toast.LENGTH_SHORT).show();
+        }
 
         switch (dialogType) {
             case ADD:
@@ -182,11 +187,10 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity implement
                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (text.getText() != null && text.getText().toString().length() > 0) {
-                                    insertRandomGenerator(new RandomGenerator(0, text.getText().toString()));
-                                } else {
-                                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
-                                }
+                                String generatorName = (text.getText().toString().length() > 0) ?
+                                        text.getText().toString()
+                                        : getString(R.string.default_generator);
+                                insertRandomGenerator(new RandomGenerator(0, generatorName));
                             }
                         });
                 break;
@@ -200,7 +204,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity implement
                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (text.getText() != null && text.getText().toString().length() > 0) {
+                                if (text.getText().toString().length() > 0) {
                                     randomGenerator.setName(text.getText().toString());
                                     updateRandomGenerator(randomGenerator);
                                 } else {
