@@ -31,7 +31,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private AppDatabase database;
 
     private enum DialogType{
-        EDIT, ADD, REMOVE
+        EDIT, ADD, REMOVE, ABOUT
     }
     RandomGenerator parentRandomGenerator;
 
@@ -158,6 +158,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
+            showDialog(DialogType.ABOUT, null);
             return true;
         }
 
@@ -250,7 +251,15 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                         });
                 break;
             default:
-                break;
+                dialogBuilder
+                        .setMessage(getString(R.string.action_about_text))
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        }).show();
+                return;
         }
 
         dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

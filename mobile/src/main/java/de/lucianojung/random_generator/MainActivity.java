@@ -55,6 +55,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                 startActivity(valueListIntent);
             }
         });
+
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -146,6 +147,9 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         View view = inflater.inflate(R.layout.fragment_generator_dialog, null);
 
         final EditText text = view.findViewById(R.id.edit_generator_title);
+        if (text == null){
+            Toast.makeText(MainActivity.this, getString(R.string.null_pointer_warning), Toast.LENGTH_SHORT).show();
+        }
 
         switch (dialogType) {
             case ADD:
@@ -155,11 +159,10 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (text.getText() != null && text.getText().toString().length() > 0) {
-                                    insertRandomGenerator(new RandomGenerator(0, text.getText().toString()));
-                                } else {
-                                    Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
-                                }
+                                String generatorName = (text.getText().toString().length() > 0) ?
+                                        text.getText().toString()
+                                        : getString(R.string.default_generator);
+                                insertRandomGenerator(new RandomGenerator(0, generatorName));
                             }
                         });
                 break;
@@ -173,7 +176,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (text.getText() != null && text.getText().toString().length() > 0) {
+                                if (text.getText().toString().length() > 0) {
                                     randomGenerator.setName(text.getText().toString());
                                     updateRandomGenerator(randomGenerator);
                                 } else {
