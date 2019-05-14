@@ -259,10 +259,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                List<RandomVariable> randomVariables = database.randomVariableDAO().getAllRandomVariablesByGID(randomGenerator.getGid());
-                for (RandomVariable variable : randomVariables) {
-                    database.randomVariableDAO().delete(variable);
-                }
                 database.randomGeneratorDAO().delete(randomGenerator);
                 return null;
             }

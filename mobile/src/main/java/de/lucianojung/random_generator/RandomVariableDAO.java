@@ -26,4 +26,7 @@ public interface RandomVariableDAO {
     @Update
     void update(RandomVariable randomVariable);
 
+    @Query("DELETE FROM RandomVariable")
+    void deleteAll();
+
 }

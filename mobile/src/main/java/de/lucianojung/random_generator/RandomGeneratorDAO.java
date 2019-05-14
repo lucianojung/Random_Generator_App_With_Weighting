@@ -28,4 +28,7 @@ public interface RandomGeneratorDAO {
 
     @Update
     void update(RandomGenerator randomGenerator);
+
+    @Query("DELETE FROM RandomGenerator")
+    void deleteAll();
 }
