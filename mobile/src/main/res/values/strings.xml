@@ -44,5 +44,4 @@
     <string name="dialog_title_weighting">weighting:</string>
     <string name="null_pointer_warning">Missing ressource! Please restart the app</string>
     <string name="default_generator">random generator</string>
-    <string name="edit">"edit "</string>
 </resources>

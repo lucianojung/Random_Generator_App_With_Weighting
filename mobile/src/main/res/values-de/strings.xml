@@ -43,5 +43,4 @@
     <string name="dialog_title_value">Wert:</string>
     <string name="null_pointer_warning">Eine Ressource fehlt! Bitte starte die App neu</string>
     <string name="default_generator">Zufallsgenerator</string>
-    <string name="edit">"Überarbeiten von "</string>
 </resources>
