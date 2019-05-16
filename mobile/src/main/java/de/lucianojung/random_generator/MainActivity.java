@@ -201,10 +201,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         .setMessage(getString(R.string.action_about_text))
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        }).show();
+                            public void onClick(DialogInterface dialog, int which) {//do nothing
+                                }}).show();
                 return;
         }
 
@@ -259,10 +257,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                List<RandomVariable> randomVariables = database.randomVariableDAO().getAllRandomVariablesByGID(randomGenerator.getGid());
-                for (RandomVariable variable : randomVariables) {
-                    database.randomVariableDAO().delete(variable);
-                }
                 database.randomGeneratorDAO().delete(randomGenerator);
                 return null;
             }
