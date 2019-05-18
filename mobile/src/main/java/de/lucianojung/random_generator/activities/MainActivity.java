@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator.Activities;
+package de.lucianojung.random_generator.activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -24,8 +24,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.lucianojung.random_generator.Database.AppDatabase;
-import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
+import de.lucianojung.random_generator.database.AppDatabase;
+import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
 import de.lucianojung.random_generator.R;
 
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
@@ -46,7 +46,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
 
         //TaskList
         generatorArrayAdapter = getGeneratorArrayAdapter();
-        //create Database;
+        //create and get Database
         database = AppDatabase.getAppDatabase(this);
 
         listView = findViewById(R.id.chooser_list);
@@ -166,7 +166,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                                 String generatorName = (text.getText().toString().length() > 0) ?
                                         text.getText().toString()
                                         : getString(R.string.default_generator);
-                                insertRandomGenerator(new RandomGenerator(0, generatorName));
+                                insertRandomGenerator(RandomGenerator.builder().gid(0).name(generatorName).build());
                             }
                         });
                 break;
@@ -250,7 +250,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                database.randomGeneratorDAO().insertAll(randomGenerator);
+                database.randomGeneratorDAO().insert(randomGenerator);
                 return null;
             }
         }.execute();

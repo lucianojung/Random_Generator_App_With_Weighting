@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator.Model.Generator;
+package de.lucianojung.random_generator.persistence.generator;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -21,7 +21,10 @@ public interface RandomGeneratorDAO {
     RandomGenerator findByName(String name);
 
     @Insert
-    void insertAll(RandomGenerator... randomGenerators);
+    void insert(RandomGenerator randomGenerator);
+
+    @Insert
+    void insertAll(List<RandomGenerator> randomGenerators);
 
     @Delete
     void delete(RandomGenerator randomGenerator);

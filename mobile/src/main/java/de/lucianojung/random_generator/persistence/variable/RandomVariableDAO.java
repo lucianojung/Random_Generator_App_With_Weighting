@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator.Model.Variable;
+package de.lucianojung.random_generator.persistence.variable;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -18,7 +18,10 @@ public interface RandomVariableDAO {
     List<RandomVariable> loadById(long randomVariableID, long randomVariableGID);
 
     @Insert
-    void insertAll(RandomVariable... randomVariables);
+    void insert(RandomVariable randomVariable);
+
+    @Insert
+    void insertAll(List<RandomVariable> randomVariables);
 
     @Delete
     void delete(RandomVariable randomVariable);
@@ -28,5 +31,4 @@ public interface RandomVariableDAO {
 
     @Query("DELETE FROM RandomVariable")
     void deleteAll();
-
 }

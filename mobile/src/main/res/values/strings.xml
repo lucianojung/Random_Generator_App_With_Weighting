@@ -47,9 +47,19 @@
     <string name="dialog_title_weighting">weighting:</string>
     <string name="null_pointer_warning">Missing ressource! Please restart the app</string>
     <string name="default_generator">random generator</string>
-    <string-array name="default_values">
-        <item>super number</item>
+    <string-array name="default_values_lotto">
+        <item>6 right + super number</item>
+        <item>6 right</item>
+        <item>5 right + super number</item>
+        <item>5 right</item>
+        <item>4 right + super number</item>
+        <item>4 right</item>
+        <item>3 right + super number</item>
+        <item>3 right</item>
+        <item>2 right + super number</item>
         <item>blank</item>
+    </string-array>
+    <string-array name="default_values_first_date">
         <item>cinema</item>
         <item>museum</item>
         <item>concert</item>
@@ -61,6 +71,8 @@
         <item>zoo</item>
         <item>minigolf</item>
         <item>climbing</item>
+    </string-array>
+    <string-array name="default_values_traffic_accident">
         <item>car</item>
         <item>truck</item>
         <item>motorbike</item>

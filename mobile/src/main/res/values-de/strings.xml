@@ -46,9 +46,19 @@
     <string name="dialog_title_value">Wert:</string>
     <string name="null_pointer_warning">Eine Ressource fehlt! Bitte starte die App neu</string>
     <string name="default_generator">Zufallsgenerator</string>
-    <string-array name="default_values">
-        <item>Superzahl</item>
+    <string-array name="default_values_lotto">
+        <item>6 Richtige + Superzahl</item>
+        <item>6 Richtige</item>
+        <item>5 Richtige + Superzahl</item>
+        <item>5 Richtige</item>
+        <item>4 Richtige + Superzahl</item>
+        <item>4 Richtige</item>
+        <item>3 Richtige + Superzahl</item>
+        <item>3 Richtige</item>
+        <item>2 Richtige + Superzahl</item>
         <item>Niete</item>
+    </string-array>
+    <string-array name="default_values_first_date">
         <item>Kino</item>
         <item>Museum</item>
         <item>Konzert</item>
@@ -60,6 +70,8 @@
         <item>Zoo</item>
         <item>Minigolf</item>
         <item>Klettern</item>
+    </string-array>
+    <string-array name="default_values_traffic_accident">
         <item>Pkw</item>
         <item>Lkw</item>
         <item>Kraftrad</item>

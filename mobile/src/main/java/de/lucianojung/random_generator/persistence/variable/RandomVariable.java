@@ -1,30 +1,32 @@
-package de.lucianojung.random_generator.Model.Variable;
+package de.lucianojung.random_generator.persistence.variable;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
+import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @SuppressWarnings("serial")
+@Getter @Setter
+@Builder
+@ToString
 @Entity(tableName = "RandomVariable", foreignKeys = {
         @ForeignKey(entity = RandomGenerator.class, parentColumns = "gid",
                 childColumns = "gid", onDelete = CASCADE)})
 public class RandomVariable implements Serializable{
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "vid")
-    private long vid;
-    @ColumnInfo(name = "gid")
-    private long gid;
-    @ColumnInfo(name = "value")
+    private final long vid;
+    private final long gid;
     private String value; //make it object for different values
-    @ColumnInfo(name = "weighting")
     private int weighting;
 
     public RandomVariable(long vid, long gid, String value, int weighting) {
@@ -34,7 +36,13 @@ public class RandomVariable implements Serializable{
         this.weighting = weighting;
     }
 
-    //getter and setter//
+    public long getVid() {
+        return vid;
+    }
+
+    public long getGid() {
+        return gid;
+    }
 
     public String getValue() {
         return value;
@@ -50,21 +58,5 @@ public class RandomVariable implements Serializable{
 
     public void setWeighting(int weighting) {
         this.weighting = weighting;
-    }
-
-    public long getVid() {
-        return vid;
-    }
-
-    public void setVid(long vid) {
-        this.vid = vid;
-    }
-
-    public long getGid() {
-        return gid;
-    }
-
-    public void setGid(long gid) {
-        this.gid = gid;
     }
 }

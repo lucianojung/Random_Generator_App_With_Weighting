@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator.Activities;
+package de.lucianojung.random_generator.activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -26,9 +26,9 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lucianojung.random_generator.Database.AppDatabase;
-import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
-import de.lucianojung.random_generator.Model.Variable.RandomVariable;
+import de.lucianojung.random_generator.database.AppDatabase;
+import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
+import de.lucianojung.random_generator.persistence.variable.RandomVariable;
 import de.lucianojung.random_generator.R;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
@@ -56,6 +56,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         database = AppDatabase.getAppDatabase(this);
         if (getIntent() != null){
             parentRandomGenerator = (RandomGenerator) getIntent().getSerializableExtra("RandomGenerator");
+            ValueListActivity.this.setTitle(parentRandomGenerator.getName());
         }
 
         ListView listView = findViewById(R.id.value_list);
@@ -203,10 +204,12 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        insertRandomVariable(new RandomVariable(
-                                                0, parentRandomGenerator.getGid(),
-                                                value.getText().toString(),
-                                                Integer.parseInt(weighting.getText().toString())));
+                                        insertRandomVariable(RandomVariable.builder()
+                                                .vid(0)
+                                                .gid(parentRandomGenerator.getGid())
+                                                .value(value.getText().toString())
+                                                .weighting(Integer.parseInt(weighting.getText().toString()))
+                                                .build());
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this,
                                                 getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
@@ -310,7 +313,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                database.randomVariableDAO().insertAll(randomVariable);
+                database.randomVariableDAO().insert(randomVariable);
                 return null;
             }
         }.execute();
