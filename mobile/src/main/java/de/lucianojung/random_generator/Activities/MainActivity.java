@@ -205,10 +205,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                         .setMessage(getString(R.string.action_about_text))
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        }).show();
+                            public void onClick(DialogInterface dialog, int which) {//do nothing
+                                }}).show();
                 return;
         }
 
