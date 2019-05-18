@@ -10,16 +10,14 @@ import java.io.Serializable;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @SuppressWarnings("serial")
-@Entity(tableName = "RandomVariable")
+@Entity(tableName = "RandomVariable", foreignKeys = {
+        @ForeignKey(entity = RandomGenerator.class, parentColumns = "gid",
+                childColumns = "gid", onDelete = CASCADE)})
 public class RandomVariable implements Serializable{
 
-    //    @PrimaryKey(autoGenerate = true)
-//    @ColumnInfo(name = "vid")
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "vid")
     private long vid;
-    @ForeignKey(entity = RandomGenerator.class, parentColumns = "gid",
-            childColumns = "gid", onDelete = CASCADE)
     @ColumnInfo(name = "gid")
     private long gid;
     @ColumnInfo(name = "value")
