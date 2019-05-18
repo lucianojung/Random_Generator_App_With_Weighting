@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator;
+package de.lucianojung.random_generator.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -25,6 +25,11 @@ import android.widget.Toast;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.lucianojung.random_generator.Database.AppDatabase;
+import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
+import de.lucianojung.random_generator.Model.Variable.RandomVariable;
+import de.lucianojung.random_generator.R;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<RandomVariable> variableAdapter;

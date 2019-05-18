@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator;
+package de.lucianojung.random_generator.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+
+import de.lucianojung.random_generator.Database.AppDatabase;
+import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
+import de.lucianojung.random_generator.R;
 
 public class MainActivity<T extends Adapter> extends AppCompatActivity {
 

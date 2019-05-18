@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator;
+package de.lucianojung.random_generator.Model.Variable;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

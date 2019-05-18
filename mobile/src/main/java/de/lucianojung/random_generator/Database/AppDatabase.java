@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator;
+package de.lucianojung.random_generator.Database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
@@ -9,6 +9,13 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.concurrent.Executors;
+import de.lucianojung.random_generator.R;
+import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
+import de.lucianojung.random_generator.Model.Generator.RandomGeneratorDAO;
+import de.lucianojung.random_generator.Model.Variable.RandomVariable;
+import de.lucianojung.random_generator.Model.Variable.RandomVariableDAO;
+
 import static android.content.ContentValues.TAG;
 
 @Database(entities = {RandomGenerator.class, RandomVariable.class}, version = 1)
@@ -18,7 +25,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RandomGeneratorDAO randomGeneratorDAO();
     public abstract RandomVariableDAO randomVariableDAO();
 
-    synchronized static AppDatabase getAppDatabase(final Context context) {
+    public synchronized static AppDatabase getAppDatabase(final Context context) {
         if (DATABASE == null) {
             DATABASE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "randomGenerator-db")
                     .addCallback(new RoomDatabase.Callback() {

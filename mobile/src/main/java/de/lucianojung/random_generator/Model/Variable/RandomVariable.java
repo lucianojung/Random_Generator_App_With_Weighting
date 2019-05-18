@@ -1,4 +1,4 @@
-package de.lucianojung.random_generator;
+package de.lucianojung.random_generator.Model.Variable;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,6 +6,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
+
+import de.lucianojung.random_generator.Model.Generator.RandomGenerator;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
