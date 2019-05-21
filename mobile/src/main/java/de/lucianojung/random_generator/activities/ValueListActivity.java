@@ -205,7 +205,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
                                         insertRandomVariable(RandomVariable.builder()
-                                                .vid(0)
+                                                .id(0)
                                                 .gid(parentRandomGenerator.getGid())
                                                 .value(value.getText().toString())
                                                 .weighting(Integer.parseInt(weighting.getText().toString()))

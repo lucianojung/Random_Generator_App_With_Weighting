@@ -1,43 +1,39 @@
 package de.lucianojung.random_generator.persistence.variable;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
 
-import java.io.Serializable;
-
+import de.lucianojung.random_generator.persistence.DatabaseEntity;
 import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @SuppressWarnings("serial")
-@Getter @Setter
-@Builder
+@Getter
 @ToString
 @Entity(tableName = "RandomVariable", foreignKeys = {
-        @ForeignKey(entity = RandomGenerator.class, parentColumns = "gid",
+        @ForeignKey(entity = RandomGenerator.class, parentColumns = "id",
                 childColumns = "gid", onDelete = CASCADE)})
-public class RandomVariable implements Serializable{
+public class RandomVariable extends DatabaseEntity{
 
-    @PrimaryKey(autoGenerate = true)
-    private final long vid;
     private final long gid;
     private String value; //make it object for different values
     private int weighting;
 
-    public RandomVariable(long vid, long gid, String value, int weighting) {
-        this.vid = vid;
+    @Builder
+    public RandomVariable(long id, long gid, String value, int weighting) {
+        super(id);
         this.gid = gid;
         this.value = value;
         this.weighting = weighting;
     }
 
     public long getVid() {
-        return vid;
+        return super.getId();
     }
 
     public long getGid() {

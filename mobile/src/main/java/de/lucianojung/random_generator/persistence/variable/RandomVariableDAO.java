@@ -14,7 +14,7 @@ public interface RandomVariableDAO {
     @Query("SELECT * FROM RandomVariable WHERE gid = :randomVariableGID")
     List<RandomVariable> getAllRandomVariablesByGID(long randomVariableGID);
 
-    @Query("SELECT * FROM RandomVariable WHERE vid = :randomVariableID AND gid = :randomVariableGID")
+    @Query("SELECT * FROM RandomVariable WHERE id = :randomVariableID AND gid = :randomVariableGID")
     List<RandomVariable> loadById(long randomVariableID, long randomVariableGID);
 
     @Insert

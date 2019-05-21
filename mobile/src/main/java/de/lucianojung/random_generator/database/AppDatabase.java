@@ -72,18 +72,18 @@ public abstract class AppDatabase extends RoomDatabase {
             for (int i = 0; i < context.getResources().getStringArray(R.array.randomGenerator).length; i++) {
                 generators.add(
                         RandomGenerator.builder()
-                        .gid(0)
+                        .id(0)
                         .name(context.getResources().getStringArray(R.array.randomGenerator)[i])
                         .build());
             }
             for (int i = 0; i < DICESIZE; i++) {
                 variables.add(RandomVariable.builder()
-                        .vid(0).gid(1)
+                        .id(0).gid(1)
                         .value(Integer.toString(i+1))
                         .weighting(1)
                         .build());
                 variables.add(RandomVariable.builder()
-                        .vid(0).gid(2)
+                        .id(0).gid(2)
                         .value(Integer.toString(i+1))
                         .weighting((i != DICESIZE - 1) ? 1 : 4)
                         .build());
@@ -92,7 +92,7 @@ public abstract class AppDatabase extends RoomDatabase {
             int i = 0;
             for (String text : context.getResources().getStringArray(R.array.default_values_lotto)) {
                 variables.add(RandomVariable.builder()
-                        .vid(0).gid(3)
+                        .id(0).gid(3)
                         .value(text)
                         .weighting( (i == 0) ? 1
                                 : (i == 1) ? 9
@@ -111,7 +111,7 @@ public abstract class AppDatabase extends RoomDatabase {
             for (String text : context.getResources().getStringArray(R.array.default_values_first_date)) {
                 Random random = new Random();
                 variables.add(RandomVariable.builder()
-                        .vid(0).gid(4)
+                        .id(0).gid(4)
                         .value(text)
                         .weighting(random.nextInt(10) + 1)
                         .build());
@@ -120,7 +120,7 @@ public abstract class AppDatabase extends RoomDatabase {
             i = 0;
             for (String text : context.getResources().getStringArray(R.array.default_values_traffic_accident)) {
                 variables.add(RandomVariable.builder()
-                        .vid(0).gid(5)
+                        .id(0).gid(5)
                         .value(text)
                         .weighting( (i == 0) ? 1434
                                 : (i == 1) ? 167

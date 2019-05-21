@@ -166,7 +166,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                                 String generatorName = (text.getText().toString().length() > 0) ?
                                         text.getText().toString()
                                         : getString(R.string.default_generator);
-                                insertRandomGenerator(RandomGenerator.builder().gid(0).name(generatorName).build());
+                                insertRandomGenerator(RandomGenerator.builder().id(0).name(generatorName).build());
                             }
                         });
                 break;
