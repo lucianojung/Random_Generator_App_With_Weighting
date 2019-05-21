@@ -22,12 +22,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:id="@+id/chooser_list"
+    <fragment
+        android:id="@+id/list_fragment"
+        android:name="de.lucianojung.random_generator.fragments.GeneratorsListFragment"
         android:layout_below="@+id/appbar_layout_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/item_height"/>
+        android:paddingBottom="@dimen/item_height"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_chooser"

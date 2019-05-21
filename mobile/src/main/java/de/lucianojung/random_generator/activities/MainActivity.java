@@ -6,33 +6,48 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import de.lucianojung.random_generator.database.AppDatabase;
+import de.lucianojung.random_generator.fragments.GeneratorsListFragment;
 import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
 import de.lucianojung.random_generator.R;
 
-public class MainActivity<T extends Adapter> extends AppCompatActivity {
+public class MainActivity<T extends Adapter> extends AppCompatActivity implements GeneratorsListFragment.OnItemSelectedListener {
 
     private ArrayAdapter<RandomGenerator> generatorArrayAdapter;
     private ListView listView;
     private AppDatabase database;
+    GeneratorsListFragment generatorsFragment;
+    final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position) {
+        if (generatorsFragment != null && generatorsFragment.isInLayout()) {
+            Toast.makeText(this, "ON ITEM CLICKED WITH FRAGMENT", Toast.LENGTH_SHORT).show();
+            Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
+            valueListIntent.putExtra("RandomGenerator", generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
+            startActivity(valueListIntent);
+        }
+    }
+
     private enum DialogType{
         ADD, EDIT, REMOVE, ABOUT
     }
@@ -44,21 +59,25 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_chooser);
         setSupportActionBar(toolbar);
 
+        //set Fragment
+//        generatorsFragment = ((GeneratorsListFragment) getSupportFragmentManager().findFragmentById(R.id.generators_listfragment));
+        generatorsFragment = ((GeneratorsListFragment) this.getSupportFragmentManager().findFragmentById(R.id.list_fragment));
+//        transaction.replace(R.id.list_fragment, generatorsFragment);
+//        transaction.commit();
         //TaskList
-        generatorArrayAdapter = getGeneratorArrayAdapter();
+        generatorArrayAdapter = generatorsFragment.getGeneratorsArrayAdapter();
         //create and get Database
         database = AppDatabase.getAppDatabase(this);
 
-        listView = findViewById(R.id.chooser_list);
-        listView.setAdapter(generatorArrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
-                valueListIntent.putExtra("RandomGenerator", generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
-                startActivity(valueListIntent);
-            }
-        });
+        listView = generatorsFragment.getView().findViewById(android.R.id.list);
+//        generatorsFragment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                Intent valueListIntent = new Intent(view.getContext(), ValueListActivity.class);
+//                valueListIntent.putExtra("RandomGenerator", generatorArrayAdapter.getItem(adapterView.getPositionForView(view)));
+//                startActivity(valueListIntent);
+//            }
+//        });
 
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -218,31 +237,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         }).show();
     }
 
-    //returns ArrayAdapter to save Choosers
-    private ArrayAdapter<RandomGenerator> getGeneratorArrayAdapter(){
-        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_generator){
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                View view;
-                if (convertView == null)
-                    view = inflater.inflate(R.layout.listitem_view_generator, parent, false);
-                else
-                    view = convertView;
-
-                TextView text1 = view.findViewById(R.id.name_chooser);
-
-                RandomGenerator randomGenerator = getItem(position);
-
-                text1.setText(randomGenerator.getName());
-
-                return view;
-            }
-        };
-        return adapter;
-    }
 
     //Database Handler
 
