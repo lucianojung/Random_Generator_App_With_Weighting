@@ -47,6 +47,8 @@
     <string name="dialog_title_weighting">weighting:</string>
     <string name="null_pointer_warning">Missing ressource! Please restart the app</string>
     <string name="default_generator">random generator</string>
+    <string name="value_type_heading">value type:</string>
+    <string name="valuetype_prompt">Choose a valuetype</string>
     <string-array name="default_values_lotto">
         <item>6 right + super number</item>
         <item>6 right</item>
@@ -80,5 +82,14 @@
         <item>bike</item>
         <item>walking</item>
         <item>other</item>
+    </string-array>
+    <string-array name="valuetype_array">
+        <item>String</item>
+        <item>Number</item>
+        <item>Letter</item>
+        <item>Dice</item>
+        <item>Coin</item>
+        <item>Color</item>
+        <item>Image</item>
     </string-array>
 </resources>

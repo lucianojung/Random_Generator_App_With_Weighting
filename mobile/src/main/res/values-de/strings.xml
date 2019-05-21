@@ -46,6 +46,8 @@
     <string name="dialog_title_value">Wert:</string>
     <string name="null_pointer_warning">Eine Ressource fehlt! Bitte starte die App neu</string>
     <string name="default_generator">Zufallsgenerator</string>
+    <string name="value_type_heading">Wertetyp:</string>
+    <string name="valuetype_prompt">Choose a valuetype</string>
     <string-array name="default_values_lotto">
         <item>6 Richtige + Superzahl</item>
         <item>6 Richtige</item>
@@ -79,5 +81,14 @@
         <item>Fahrrad</item>
         <item>Fußgänger</item>
         <item>Sonstiges</item>
+    </string-array>
+    <string-array name="valuetype_array">
+        <item>Text</item>
+        <item>Nummer</item>
+        <item>Buchstabe</item>
+        <item>Würfel</item>
+        <item>Münze</item>
+        <item>Farbe</item>
+        <item>Bild</item>
     </string-array>
 </resources>

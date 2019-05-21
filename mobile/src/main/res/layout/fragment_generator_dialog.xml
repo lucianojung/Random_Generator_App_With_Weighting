@@ -30,7 +30,22 @@
             android:inputType="text"
             android:hint="@string/name_dialog_text_chooser" />
 
-        <!--todo add DropDown for Type and/ or image -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/value_type_heading" />
+
+        <Spinner
+            android:id="@+id/spinner_valuetype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/valuetype_array"
+            android:prompt="@string/valuetype_prompt" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
