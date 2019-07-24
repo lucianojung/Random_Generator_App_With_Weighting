@@ -6,13 +6,10 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import de.lucianojung.random_generator.R;
-import de.lucianojung.random_generator.database.AppDatabase;
-import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
 import de.lucianojung.random_generator.persistence.settings.Setting;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -22,7 +19,7 @@ public class SettingsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.settings_listfragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         return view;
     }
 

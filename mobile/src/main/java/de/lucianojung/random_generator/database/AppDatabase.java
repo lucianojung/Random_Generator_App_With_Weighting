@@ -1,5 +1,6 @@
 package de.lucianojung.random_generator.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -10,25 +11,29 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import de.lucianojung.random_generator.R;
-import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
-import de.lucianojung.random_generator.persistence.generator.RandomGeneratorDAO;
+import de.lucianojung.random_generator.persistence.generator.Generator;
+import de.lucianojung.random_generator.persistence.generator.GeneratorDao;
+import de.lucianojung.random_generator.persistence.generator.GeneratorDao_Impl;
 import de.lucianojung.random_generator.persistence.settings.Setting;
-import de.lucianojung.random_generator.persistence.variable.RandomVariable;
-import de.lucianojung.random_generator.persistence.variable.RandomVariableDAO;
+import de.lucianojung.random_generator.persistence.variable.Variable;
+import de.lucianojung.random_generator.persistence.variable.VariableDao;
+import de.lucianojung.random_generator.persistence.variable.VariableDao_Impl;
 
 import static android.content.ContentValues.TAG;
 
-@Database(entities = {RandomGenerator.class, RandomVariable.class, Setting.class}, version = 2)
-public abstract class AppDatabase extends RoomDatabase {
+@SuppressWarnings("serial")
+@Database(entities = {Generator.class, Variable.class, Setting.class}, version = 2)
+public abstract class AppDatabase extends RoomDatabase implements Serializable {
 
     private static AppDatabase DATABASE;
-    public abstract RandomGeneratorDAO randomGeneratorDAO();
-    public abstract RandomVariableDAO randomVariableDAO();
+    public abstract GeneratorDao randomGeneratorDAO();
+    public abstract VariableDao randomVariableDAO();
 
     public synchronized static AppDatabase getAppDatabase(final Context context) {
         if (DATABASE == null) {
@@ -68,41 +73,41 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         private static final int DICESIZE = 6;
-        private RandomGeneratorDAO randomGeneratorDAO;
-        private RandomVariableDAO randomVariableDAO;
+        private GeneratorDao generatorDao;
+        private VariableDao variableDao;
         private Context context;
 
         PopulateDbAsync(AppDatabase instance, Context context) {
             this.context = context;
-            randomGeneratorDAO = instance.randomGeneratorDAO();
-            randomVariableDAO = instance.randomVariableDAO();
+            generatorDao = instance.randomGeneratorDAO();
+            variableDao = instance.randomVariableDAO();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            randomGeneratorDAO.deleteAll();
-            randomVariableDAO.deleteAll();
+            generatorDao.deleteAll();
+            variableDao.deleteAll();
 
-            List<RandomGenerator> generators = new ArrayList<>();
-            List<RandomVariable> variables = new ArrayList<>();
+            List<Generator> generators = new ArrayList<>();
+            List<Variable> variables = new ArrayList<>();
 
             //create default generators
-            for (int i = 0; i < context.getResources().getStringArray(R.array.randomGenerator).length; i++) {
+            for (int i = 0; i < context.getResources().getStringArray(R.array.generator).length; i++) {
                 generators.add(
-                        RandomGenerator.builder()
+                        Generator.builder()
                         .id(0)
-                        .name(context.getResources().getStringArray(R.array.randomGenerator)[i])
+                        .name(context.getResources().getStringArray(R.array.generator)[i])
                         .build());
             }
 
             //create default variables for generators
             for (int i = 0; i < DICESIZE; i++) {
-                variables.add(RandomVariable.builder()
+                variables.add(Variable.builder()
                         .id(0).gid(1)
                         .value(Integer.toString(i+1))
                         .weighting(1)
                         .build());
-                variables.add(RandomVariable.builder()
+                variables.add(Variable.builder()
                         .id(0).gid(2)
                         .value(Integer.toString(i+1))
                         .weighting((i != DICESIZE - 1) ? 1 : 4)
@@ -111,7 +116,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             int i = 0;
             for (String text : context.getResources().getStringArray(R.array.default_values_lotto)) {
-                variables.add(RandomVariable.builder()
+                variables.add(Variable.builder()
                         .id(0).gid(3)
                         .value(text)
                         .weighting( (i == 0) ? 1
@@ -130,7 +135,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             for (String text : context.getResources().getStringArray(R.array.default_values_first_date)) {
                 Random random = new Random();
-                variables.add(RandomVariable.builder()
+                variables.add(Variable.builder()
                         .id(0).gid(4)
                         .value(text)
                         .weighting(random.nextInt(10) + 1)
@@ -139,7 +144,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             i = 0;
             for (String text : context.getResources().getStringArray(R.array.default_values_traffic_accident)) {
-                variables.add(RandomVariable.builder()
+                variables.add(Variable.builder()
                         .id(0).gid(5)
                         .value(text)
                         .weighting( (i == 0) ? 1434

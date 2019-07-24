@@ -2,15 +2,13 @@ package de.lucianojung.random_generator.persistence.settings;
 
 import android.arch.persistence.room.Entity;
 
-import de.lucianojung.random_generator.persistence.DatabaseEntity;
-import lombok.Getter;
-import lombok.Setter;
+import de.lucianojung.random_generator.persistence.BaseEntity;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
 @ToString
 @Entity(tableName = "Settings")
-public class Setting extends DatabaseEntity {
+public class Setting extends BaseEntity {
 
     private String name;
     private boolean activated;

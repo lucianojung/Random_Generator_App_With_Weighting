@@ -30,11 +30,11 @@
         android:id="@+id/generatorDialog"
         android:name="de.lucianojung.random_generator.activities.MainActivity"
         android:label="new_chooser_dialog"
-        tools:layout="@layout/fragment_generator_dialog" />
+        tools:layout="@layout/fragment_dialog_generator" />
     <fragment
         android:id="@+id/valueDialog"
         android:name="de.lucianojung.random_generator.activities.ValueListActivity"
         android:label="new_value_dialog"
-        tools:layout="@layout/fragment_variable_dialog" />
+        tools:layout="@layout/fragment_dialog_variable" />
 
 </navigation>

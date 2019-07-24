@@ -2,19 +2,19 @@ package de.lucianojung.random_generator.persistence.generator;
 
 import android.arch.persistence.room.Entity;
 
-import de.lucianojung.random_generator.persistence.DatabaseEntity;
+import de.lucianojung.random_generator.persistence.BaseEntity;
 import lombok.Builder;
 import lombok.ToString;
 
 @SuppressWarnings("serial")
 @ToString
-@Entity(tableName = "RandomGenerator")
-public class RandomGenerator extends DatabaseEntity {
+@Entity(tableName = "Generator")
+public class Generator extends BaseEntity {
 
     private String name;
 
     @Builder
-    public RandomGenerator(long id, String name) {
+    public Generator(long id, String name) {
         super(id);
         this.name = name;
     }

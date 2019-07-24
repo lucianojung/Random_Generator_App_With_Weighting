@@ -8,12 +8,12 @@ import lombok.Getter;
 
 @Getter
 @SuppressWarnings("serial")
-public class DatabaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private final long id;
 
-    public DatabaseEntity(long id) {
+    public BaseEntity(long id) {
         this.id = id;
     }
 

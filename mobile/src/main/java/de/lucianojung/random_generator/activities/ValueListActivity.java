@@ -27,18 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.lucianojung.random_generator.database.AppDatabase;
-import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
-import de.lucianojung.random_generator.persistence.variable.RandomVariable;
+import de.lucianojung.random_generator.persistence.generator.Generator;
+import de.lucianojung.random_generator.persistence.variable.Variable;
 import de.lucianojung.random_generator.R;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
-    private ArrayAdapter<RandomVariable> variableAdapter;
+    private ArrayAdapter<Variable> variableAdapter;
     private AppDatabase database;
 
     private enum DialogType{
         EDIT, ADD, REMOVE, ABOUT
     }
-    RandomGenerator parentRandomGenerator;
+    Generator parentGenerator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         //create Database;
         database = AppDatabase.getAppDatabase(this);
         if (getIntent() != null){
-            parentRandomGenerator = (RandomGenerator) getIntent().getSerializableExtra("RandomGenerator");
-            ValueListActivity.this.setTitle(parentRandomGenerator.getName());
+            parentGenerator = (Generator) getIntent().getSerializableExtra("Generator");
+            ValueListActivity.this.setTitle(parentGenerator.getName());
         }
 
         ListView listView = findViewById(R.id.value_list);
@@ -102,10 +102,10 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private void loadDatabase() {
         variableAdapter.clear();
-        new AsyncTask<Void, Void, List<RandomVariable>>(){
+        new AsyncTask<Void, Void, List<Variable>>(){
             @Override
-            protected List<RandomVariable> doInBackground(Void... params) {
-                return database.randomVariableDAO().getAllRandomVariablesByGID(parentRandomGenerator.getGid());
+            protected List<Variable> doInBackground(Void... params) {
+                return database.randomVariableDAO().getAllRandomVariablesByGID(parentGenerator.getGid());
             }
 
             @Override
@@ -118,7 +118,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private CharSequence chooseRandomValue() {
         if (variableAdapter.getCount() == 0) return "";
         //get all data and default elements
-        List<RandomVariable> valueList = new ArrayList<>();
+        List<Variable> valueList = new ArrayList<>();
         for (int i = 0; i < variableAdapter.getCount(); i++) {
             valueList.add(variableAdapter.getItem(i));
         }
@@ -183,11 +183,11 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void showDialog(DialogType dialogType, final RandomVariable randomVariable){
+    private void showDialog(DialogType dialogType, final Variable variable){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_variable_dialog, null);
+        View view = inflater.inflate(R.layout.fragment_dialog_variable, null);
 
         final EditText value = view.findViewById(R.id.edit_value);
         final EditText weighting = view.findViewById(R.id.edit_weighting);
@@ -204,9 +204,9 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        insertRandomVariable(RandomVariable.builder()
+                                        insertRandomVariable(Variable.builder()
                                                 .id(0)
-                                                .gid(parentRandomGenerator.getGid())
+                                                .gid(parentGenerator.getGid())
                                                 .value(value.getText().toString())
                                                 .weighting(Integer.parseInt(weighting.getText().toString()))
                                                 .build());
@@ -223,8 +223,8 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                 break;
 
             case EDIT:
-                value.setText(randomVariable.getValue());
-                weighting.setText(Integer.toString(randomVariable.getWeighting()));
+                value.setText(variable.getValue());
+                weighting.setText(Integer.toString(variable.getWeighting()));
 
                 dialogBuilder
                         .setView(view)
@@ -235,9 +235,9 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                                 if (value.getText() != null && value.getText().toString().length() > 0
                                         && weighting.getText() != null && weighting.getText().toString().length() > 0) {
                                     try {
-                                        randomVariable.setValue(value.getText().toString());
-                                        randomVariable.setWeighting(Integer.parseInt(weighting.getText().toString()));
-                                        updateRandomVariable(randomVariable);
+                                        variable.setValue(value.getText().toString());
+                                        variable.setWeighting(Integer.parseInt(weighting.getText().toString()));
+                                        updateRandomVariable(variable);
                                     } catch (Exception e) {
                                         Toast.makeText(ValueListActivity.this, getString(R.string.not_valid_value_warning), Toast.LENGTH_LONG).show();
                                     }
@@ -254,7 +254,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteRandomVariable(randomVariable);
+                                deleteRandomVariable(variable);
                             }
                         });
                 break;
@@ -278,10 +278,10 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
         }).show();
     }
 
-    private ArrayAdapter<RandomVariable> getVariableAdapter(){
+    private ArrayAdapter<Variable> getVariableAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        return new ArrayAdapter<RandomVariable>(ValueListActivity.this, R.layout.listitem_view_generator){
+        return new ArrayAdapter<Variable>(ValueListActivity.this, R.layout.listitem_view_generator){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
@@ -294,7 +294,7 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
                 TextView valueText = view.findViewById(R.id.name_value);
                 TextView weightingText = view.findViewById(R.id.name_weighting);
 
-                RandomVariable value = getItem(position);
+                Variable value = getItem(position);
 
                 assert value != null;
                 valueText.setText(value.getValue());
@@ -309,33 +309,33 @@ public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
 
     //Database Handler
 
-    private void insertRandomVariable(final RandomVariable randomVariable) {
+    private void insertRandomVariable(final Variable variable) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                database.randomVariableDAO().insert(randomVariable);
+                database.randomVariableDAO().insert(variable);
                 return null;
             }
         }.execute();
         loadDatabase();
     }
 
-    private void deleteRandomVariable(final RandomVariable randomVariable) {
+    private void deleteRandomVariable(final Variable variable) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                database.randomVariableDAO().delete(randomVariable);
+                database.randomVariableDAO().delete(variable);
                 return null;
             }
         }.execute();
-        variableAdapter.remove(randomVariable);
+        variableAdapter.remove(variable);
     }
 
-    private void updateRandomVariable(final RandomVariable randomVariable) {
+    private void updateRandomVariable(final Variable variable) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                database.randomVariableDAO().update(randomVariable);
+                database.randomVariableDAO().update(variable);
                 return null;
             }
         }.execute();

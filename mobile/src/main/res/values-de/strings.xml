@@ -14,7 +14,7 @@
     <string name="empty_string_warning">Bitte gib etwas ein!</string>
     <string name="not_valid_value_warning">Bitte stelle sicher eine Zahl eingegeben zu haben!</string>
 
-    <string-array name="randomGenerator">
+    <string-array name="generator">
         <item>Würfel</item>
         <item>Gezinkter Würfel</item>
         <item>Lotto</item>
