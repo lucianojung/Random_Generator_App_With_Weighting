@@ -81,4 +81,5 @@
         <item>walking</item>
         <item>other</item>
     </string-array>
+    <string name="action_edit">Edit</string>
 </resources>

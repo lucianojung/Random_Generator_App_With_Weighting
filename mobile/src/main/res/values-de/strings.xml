@@ -80,4 +80,5 @@
         <item>Fußgänger</item>
         <item>Sonstiges</item>
     </string-array>
+    <string name="action_edit">Editieren</string>
 </resources>

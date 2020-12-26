@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.lucianojung.random_generator.database.AppDatabase;
 import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
@@ -36,6 +38,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     private enum DialogType{
         ADD, EDIT, REMOVE, ABOUT
     }
+    boolean editViewEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +63,6 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             }
         });
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // System.out.println(valueAdapter.getItem(position).getValue());
-                showDialog(DialogType.EDIT, generatorArrayAdapter.getItem(position));
-            }
-        });*/
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -75,7 +71,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_chooser);
+        FloatingActionButton fab = findViewById(R.id.fab_chooser);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +129,17 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
         if (id == R.id.action_about) {
             showDialog(DialogType.ABOUT, null);
             return true;
+        } else if (id == R.id.action_edit) {
+            if (editViewEnabled) {
+                generatorArrayAdapter = getGeneratorArrayAdapter();
+            } else {
+                generatorArrayAdapter = getEditGeneratorArrayAdapter();
+            }
+            listView.setAdapter(generatorArrayAdapter);
+            loadDatabase();
+
+            editViewEnabled = !editViewEnabled;
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,6 +149,12 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     protected void onDestroy() {
         AppDatabase.destroyInstance();
         super.onDestroy();
+    }
+
+    public void onEditButtonClicked(View view){
+        view.getParent();
+        TextView textView = ((ConstraintLayout) view.getParent()).findViewById(R.id.name_chooser);
+        showEditRandomGenerator(textView.getText().toString());
     }
 
     private void showDialog(DialogType dialogType, final RandomGenerator randomGenerator){
@@ -183,6 +196,8 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                                 if (text.getText().toString().length() > 0) {
                                     randomGenerator.setName(text.getText().toString());
                                     updateRandomGenerator(randomGenerator);
+
+                                    loadDatabase();
                                 } else {
                                     Toast.makeText(MainActivity.this, getString(R.string.empty_string_warning), Toast.LENGTH_SHORT).show();
                                 }
@@ -222,7 +237,7 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<RandomGenerator> getGeneratorArrayAdapter(){
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_generator){
+        return new ArrayAdapter<RandomGenerator>(MainActivity.this, R.layout.listitem_view_generator){
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
@@ -233,9 +248,31 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
                     view = convertView;
 
                 TextView text1 = view.findViewById(R.id.name_chooser);
+                final RandomGenerator randomGenerator = getItem(position);
+                text1.setText(randomGenerator.getName());
 
-                RandomGenerator randomGenerator = getItem(position);
+                return view;
+            }
+        };
+    }
 
+
+    //returns ArrayAdapter to save Choosers
+    private ArrayAdapter<RandomGenerator> getEditGeneratorArrayAdapter(){
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        ArrayAdapter<RandomGenerator> adapter = new ArrayAdapter<RandomGenerator>(this, R.layout.listitem_view_generator_edit){
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view;
+                if (convertView == null)
+                    view = inflater.inflate(R.layout.listitem_view_generator_edit, parent, false);
+                else
+                    view = convertView;
+
+                TextView text1 = view.findViewById(R.id.name_chooser);
+                final RandomGenerator randomGenerator = getItem(position);
                 text1.setText(randomGenerator.getName());
 
                 return view;
@@ -245,6 +282,26 @@ public class MainActivity<T extends Adapter> extends AppCompatActivity {
     }
 
     //Database Handler
+
+    private void showEditRandomGenerator(final String name) {
+        new AsyncTask<Void, Void, List<RandomGenerator>>(){
+            @Override
+            protected List<RandomGenerator> doInBackground(Void... params) {
+                return database.randomGeneratorDAO().getAllRandomGenerators();
+            }
+
+            @Override
+            protected void onPostExecute(List<RandomGenerator> randomGenerators) {
+                super.onPostExecute(randomGenerators);
+                for (RandomGenerator generator : randomGenerators) {
+                    if (generator.getName().equals(name)) {
+                        showDialog(DialogType.EDIT, generator);
+                        break;
+                    }
+                }
+            }
+        }.execute();
+    }
 
     private void insertRandomGenerator(final RandomGenerator randomGenerator) {
         new AsyncTask<Void, Void, Void>() {
