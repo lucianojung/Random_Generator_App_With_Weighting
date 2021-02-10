@@ -1,8 +1,8 @@
 package de.lucianojung.random_generator.persistence.variable;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
+
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
 
 import de.lucianojung.random_generator.persistence.DatabaseEntity;
 import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.CASCADE;
 
 @SuppressWarnings("serial")
 @Getter

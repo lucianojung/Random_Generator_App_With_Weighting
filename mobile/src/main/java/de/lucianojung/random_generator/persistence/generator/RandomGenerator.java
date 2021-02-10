@@ -1,6 +1,6 @@
 package de.lucianojung.random_generator.persistence.generator;
 
-import android.arch.persistence.room.Entity;
+import androidx.room.Entity;
 
 import de.lucianojung.random_generator.persistence.DatabaseEntity;
 import lombok.Builder;

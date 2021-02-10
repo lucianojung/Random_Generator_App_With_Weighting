@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,14 +18,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lucianojung.random_generator.R;
 import de.lucianojung.random_generator.database.AppDatabase;
 import de.lucianojung.random_generator.persistence.generator.RandomGenerator;
 import de.lucianojung.random_generator.persistence.variable.RandomVariable;
-import de.lucianojung.random_generator.R;
 
 public class ValueListActivity<T extends Adapter> extends AppCompatActivity {
     private ArrayAdapter<RandomVariable> variableAdapter;

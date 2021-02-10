@@ -1,6 +1,6 @@
 package de.lucianojung.random_generator.persistence;
 
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
